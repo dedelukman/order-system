@@ -24,7 +24,7 @@
 
 </head>
 
-<body class="" style="background-image: url({{ asset('theme/img/login.jpeg')}});">
+<body class="bg-gradient-primary" >
   
    <div > 
 
@@ -38,8 +38,8 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block ">
-                                <x-jet-application-mark class="pt-5 pl-3"></x-jet-application-mark>
+                            <div class="col-lg-6 d-none d-lg-block " style="background-image: url({{ asset('theme/img/login.jpg')}}); ">
+                                
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
