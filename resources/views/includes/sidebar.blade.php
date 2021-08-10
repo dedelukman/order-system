@@ -12,8 +12,8 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('dashboard') }}">
+            <li class="nav-item active">
+                <a class="nav-link " href="{{ route('dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -23,40 +23,60 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Interface
+                Master
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+            <!-- Nav Item - Customer Collapse Menu -->
+            <li class="nav-item  {{ (request()->is('branch*')) ? 'active' : ''}}">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCustomer"
+                    aria-expanded="true" aria-controls="collapseCustomer">
+                    <i class="fas fa-fw fa-building"></i>
+                    <span>Customer</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseCustomer" class="collapse  {{ (request()->is('branch*')) ? 'show' : ''}}" 
+                    aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="{{ asset('theme/buttons.html') }}">Buttons</a>
-                        <a class="collapse-item" href="{{ asset('theme/cards.html') }}">Cards</a>
+                        <h6 class="collapse-header">Custom Customer:</h6>
+                        <a class="collapse-item
+                        {{ (request()->is('branch*')) ? 'active' : ''}}
+                        " 
+                        href="{{ route('branch') }}">Cabang</a>
+                        <a class="collapse-item" href="{{ asset('theme/cards.html') }}">User</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
+            <!-- Nav Item - Product Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
+                <a class="nav-link collapsed" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseProduct"
+                    aria-expanded="true" aria-controls="collapseProduct">
+                    <i class="fas fa-fw fa-archive"></i>
+                    <span>Product</span>
                 </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                <div id="collapseProduct" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="{{ asset('theme/utilities-color.html') }}">Colors</a>
-                        <a class="collapse-item" href="{{ asset('theme/utilities-border.html') }}">Borders</a>
-                        <a class="collapse-item" href="{{ asset('theme/utilities-animation.html') }}">Animations</a>
-                        <a class="collapse-item" href="{{ asset('theme/utilities-other.html') }}">Other</a>
+                        <h6 class="collapse-header">Custom Product:</h6>
+                        <a class="collapse-item" href="{{ asset('theme/utilities-color.html') }}">Category</a>
+                        <a class="collapse-item" href="{{ asset('theme/utilities-border.html') }}">Product</a>                      
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Order Master Collapse Menu -->
+            <li class="nav-item ">
+                <a class="nav-link" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseOrderMaster" aria-expanded="true"
+                    aria-controls="collapseOrderMaster">
+                    <i class="fas fa-fw fa-shopping-cart"></i>
+                    <span>Order</span>
+                </a>
+                <div id="collapseOrderMaster" class="collapse " aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Order:</h6>
+                        <a class="collapse-item" href="{{ asset('theme/login.html') }}">Tambah Baru</a>
+                        <a class="collapse-item" href="{{ asset('theme/register.html') }}">Daftar Order</a>
+                      
                     </div>
                 </div>
             </li>
@@ -66,44 +86,55 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Addons
+                Cabang
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
-                    aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseOrderCabang" aria-expanded="true"
+                    aria-controls="collapseOrderCabang">
+                    <i class="fas fa-fw fa-cart-plus"></i>
+                    <span>Order</span>
                 </a>
-                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+                <div id="collapseOrderCabang" class="collapse " aria-labelledby="headingPages"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="{{ asset('theme/login.html') }}">Login</a>
-                        <a class="collapse-item" href="{{ asset('theme/register.html') }}">Register</a>
-                        <a class="collapse-item" href="{{ asset('theme/forgot-password.html') }}">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="{{ asset('theme/404.html') }}">404 Page</a>
-                        <a class="collapse-item active" href="{{ asset('theme/blank.html') }}">Blank Page</a>
+                        <h6 class="collapse-header">Custom Order:</h6>
+                        <a class="collapse-item" href="{{ asset('theme/login.html') }}">Tambah Baru</a>
+                        <a class="collapse-item" href="{{ asset('theme/register.html') }}">Daftar Order</a>
+                      
                     </div>
                 </div>
             </li>
 
-            <!-- Nav Item - Charts -->
+             <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Distributor & Agen
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="{{ asset('theme/charts.html') }}">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
+                <a class="nav-link" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseOrderDisAgen" aria-expanded="true"
+                    aria-controls="collapseOrderDisAgen">
+                    <i class="fas fa-fw fa-cart-plus"></i>
+                    <span>Order</span>
+                </a>
+                <div id="collapseOrderDisAgen" class="collapse " aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Order:</h6>
+                        <a class="collapse-item" href="{{ asset('theme/login.html') }}">Tambah Baru</a>
+                        <a class="collapse-item" href="{{ asset('theme/register.html') }}">Daftar Order</a>
+                      
+                    </div>
+                </div>
             </li>
 
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ asset('theme/tables.html') }}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
+
+            
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">

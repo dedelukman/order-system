@@ -13,9 +13,12 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-   @include('includes.style')
 
-   @livewireStyles
+    @stack('prepend-style')
+    @include('includes.style')
+    @stack('addon-style')
+
+    @livewireStyles
 
 </head>
 
@@ -66,7 +69,9 @@
     @include('includes.logout')
 
     <!-- Script --> 
+    @stack('prefend-script')
     @include('includes.script')
+    @stack('addon-script')
 
     @livewireScripts
 
