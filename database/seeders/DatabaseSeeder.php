@@ -13,6 +13,31 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(20)->create();
+         \App\Models\User::create([            
+            'name'=>'Dede',
+            'email'=>'dede@araya.co.id',
+            'password'=>'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'role'=>'ADMIN',
+            'branch_id'=>'1',
+            'active'=>'1',
+            'email_verified_at' => now()
+        ]);
+        \App\Models\User::create([            
+            'name'=>'Dede',
+            'email'=>'dlukmanul.h@gmail.com',
+            'password'=>'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'role'=>'ADMIN',
+            'branch_id'=>'2',
+            'active'=>'1',
+            'email_verified_at' => now()
+        ]);
+        $this->call([
+        BranchSeeder::class,
+        CategorySeeder::class,
+        ProductSeeder::class,
+        OrderSeeder::class,
+        OrderDetailSeeder::class,
+    ]);
     }
 }
