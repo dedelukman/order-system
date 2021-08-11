@@ -36,7 +36,7 @@
                                 <table class="table table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Kode</th>
+                                            <th sortable>Kode</th>
                                             <th>Nama</th>
                                             <th>Kategori</th>
                                             <th>Harga</th>

@@ -6,14 +6,14 @@
                     class="py-1 px-2 rounded-lg w-1/4"/>
                 </div>
             </div>
-<div class="flex-col space-y-4 table-responsive">
-    <x-table>
+<div class="flex-col space-y-4 " >
+    <x-table style="overflow: scroll; ">
         <x-slot name="head">
-            <x-table.heading sortable direction="desc">Name</x-table.heading>
-            <x-table.heading sortable>Email</x-table.heading>
-            <x-table.heading sortable>Bagian</x-table.heading>
-            <x-table.heading sortable>Akses</x-table.heading>
-            <x-table.heading sortable>Status</x-table.heading>
+            <x-table.heading sortable wire:click="sortBy('name')">Name</x-table.heading>
+            <x-table.heading sortable wire:click="sortBy('email')">Email</x-table.heading>
+            <x-table.heading sortable wire:click="sortBy('nameBranch')">Bagian</x-table.heading>
+            <x-table.heading sortable wire:click="sortBy('role')">Akses</x-table.heading>
+            <x-table.heading sortable wire:click="sortBy('active')">Status</x-table.heading>
         </x-slot>
         <x-slot name="body">
             @forelse ( $users as $user )
