@@ -11,18 +11,27 @@
                         </div>
                         <div class="card-body">
                             <!-- Topbar Search -->
-                            <form
+                            <div class="flex flex-auto">
+                                <form
                                 class="d-sm-inline-block form-inline mr-auto ml-md-3 mw-100 mb-3 navbar-search">
-                                <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                        aria-label="Search" aria-describedby="basic-addon2" wire:model="search">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                            aria-label="Search" aria-describedby="basic-addon2" wire:model="search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
                                     </div>
+                                </form> 
+                                <div >
+                                    <button class="btn btn-primary ">
+                                        <i class="fas fa-plus fa-sm"> New</i>
+                                    </button>  
                                 </div>
-                            </form>                         
+                            </div>
+                            
+                                                 
                             <div class="table-responsive">
                                 <table class="table table-bordered" width="100%" cellspacing="0">
                                     <thead>
@@ -37,7 +46,7 @@
                                     </thead>
                                    
                                     <tbody>
-                                        @foreach ($branches as $branch )
+                                        @forelse($branches as $branch )
                                             <tr>
                                                 <td>{{ $branch->code }}</td>
                                                 <td>{{ $branch->name }}</td>
@@ -49,19 +58,23 @@
                                                             {{ $branch->category }}
                                                         </button>
                                                         <div class="dropdown-menu animated--fade-in"
-                                                            aria-labelledby="dropdownMenuButton" >
-                                                            @if ($branch->price =='HJ')
-                                                                 <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
+                                                            aria-labelledby="dropdownMenuButton" >                                                       
+                                                            <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
                                                                    >
-                                                                    HET2
-                                                                </button>
-                                                            @else
-                                                                 <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
+                                                                    PUSAT
+                                                            </button>
+                                                            <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
                                                                    >
-                                                                    HJ
-                                                                </button>
-                                                            @endif
-                                                                                                                   
+                                                                    CABANG
+                                                            </button>
+                                                            <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
+                                                                   >
+                                                                    DISTRIBUTOR
+                                                            </button> 
+                                                            <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
+                                                                   >
+                                                                    AGEN
+                                                            </button>                                                           
                                                         </div>
                                                     </div>
                                                 </td>
@@ -110,7 +123,8 @@
                                                 <td>
                                                     <div class="dropdown mb-4">
                                                         <button class="btn dropdown-toggle" type="button"
-                                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" 
+                                                            wire:click="edit({{ $branch->id }})"
                                                             aria-expanded="false">
                                                             Aksi
                                                         </button>
@@ -126,7 +140,19 @@
                                                     </div>
                                                 </td>                                                
                                             </tr>
-                                        @endforeach
+                                        
+                                            @empty
+
+                                            <tr>
+                                                <td colspan="6" style="text-align: center;"> 
+                                                    <p class="py-3">
+                                                        <i class="fas fa-archive fa-sm"></i> Data yang Anda cari tidak ditemukan
+                                                    </p>
+                                                   
+                                                </td>
+                                            </tr>
+                                            
+                                        @endforelse 
                                        
                                        
                                     </tbody>

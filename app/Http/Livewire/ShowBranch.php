@@ -12,6 +12,11 @@ class ShowBranch extends Component
     use WithPagination;
 
     public $search;
+    public Branch $editing;
+
+    public function edit(Branch $branch){
+        $this->editing = $branch;
+    }
 
     public function changeActive(Branch $branch, $akses){
         $branch->active = $akses;
