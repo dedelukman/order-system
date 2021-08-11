@@ -12,7 +12,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item {{ (request()->is('dashboard')) ? 'active' : ''}}">
                 <a class="nav-link " href="{{ route('dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
@@ -27,21 +27,21 @@
             </div>
 
             <!-- Nav Item - Customer Collapse Menu -->
-            <li class="nav-item  {{ (request()->is('branch*')) ? 'active' : ''}}">
+            <li class="nav-item  {{ (request()->is('customer*')) ? 'active' : ''}}">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCustomer"
                     aria-expanded="true" aria-controls="collapseCustomer">
                     <i class="fas fa-fw fa-building"></i>
                     <span>Customer</span>
                 </a>
-                <div id="collapseCustomer" class="collapse  {{ (request()->is('branch*')) ? 'show' : ''}}" 
+                <div id="collapseCustomer" class="collapse  {{ (request()->is('customer*')) ? 'show' : ''}}" 
                     aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Customer:</h6>
                         <a class="collapse-item
-                        {{ (request()->is('branch*')) ? 'active' : ''}}
+                        {{ (request()->is('customer/branch')) ? 'active' : ''}}
                         " 
                         href="{{ route('branch') }}">Cabang</a>
-                        <a class="collapse-item" href="{{ asset('theme/cards.html') }}">User</a>
+                        <a class="collapse-item  {{ (request()->is('customer/user')) ? 'active' : ''}}" href="{{ route('user') }}">User</a>
                     </div>
                 </div>
             </li>

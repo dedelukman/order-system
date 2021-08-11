@@ -20,4 +20,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/branch', \App\Http\Livewire\ShowBranch::class)->name('branch');
+Route::get('/customer/branch', \App\Http\Livewire\ShowBranch::class)->name('branch');
+Route::get('/customer/user', \App\Http\Livewire\ShowUser::class)->name('user');
