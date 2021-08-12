@@ -22,3 +22,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::get('/customer/branch', \App\Http\Livewire\ShowBranch::class)->name('branch');
 Route::get('/customer/user', \App\Http\Livewire\ShowUser::class)->name('user');
+Route::get('/product/category', \App\Http\Livewire\ShowCategory::class)->name('category');
+Route::get('/product/detail', \App\Http\Livewire\ShowCategory::class)->name('product');
+Route::get('/order/list', \App\Http\Livewire\ShowCategory::class)->name('list.order');

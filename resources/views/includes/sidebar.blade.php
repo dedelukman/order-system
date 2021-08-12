@@ -38,44 +38,53 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Customer:</h6>
                         <a class="collapse-item
-                        {{ (request()->is('customer/branch')) ? 'active' : ''}}
-                        " 
+                        {{ (request()->is('customer/branch')) ? 'active' : ''}}" 
                         href="{{ route('branch') }}">Cabang</a>
-                        <a class="collapse-item  {{ (request()->is('customer/user')) ? 'active' : ''}}" href="{{ route('user') }}">User</a>
+                        <a class="collapse-item  
+                        {{ (request()->is('customer/user')) ? 'active' : ''}}" 
+                        href="{{ route('user') }}">User</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Product Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseProduct"
+            <li class="nav-item {{ (request()->is('product*')) ? 'active' : ''}}">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduct"
                     aria-expanded="true" aria-controls="collapseProduct">
                     <i class="fas fa-fw fa-archive"></i>
                     <span>Product</span>
                 </a>
-                <div id="collapseProduct" class="collapse" aria-labelledby="headingUtilities"
+                <div id="collapseProduct" class="collapse {{ (request()->is('product*')) ? 'show' : ''}}" 
+                    aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Product:</h6>
-                        <a class="collapse-item" href="{{ asset('theme/utilities-color.html') }}">Category</a>
-                        <a class="collapse-item" href="{{ asset('theme/utilities-border.html') }}">Product</a>                      
+                        <a class="collapse-item
+                        {{ (request()->is('product/category')) ? 'active' : ''}}" 
+                        href="{{ route('category') }}">Category</a>
+                        <a class="collapse-item
+                        {{ (request()->is('product/detail')) ? 'active' : ''}}" 
+                        href="{{ route('product') }}">Product</a>                      
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Order Master Collapse Menu -->
-            <li class="nav-item ">
-                <a class="nav-link" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseOrderMaster" aria-expanded="true"
+            <li class="nav-item {{ (request()->is('order*')) ? 'active' : ''}}">
+                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOrderMaster" aria-expanded="true"
                     aria-controls="collapseOrderMaster">
                     <i class="fas fa-fw fa-shopping-cart"></i>
                     <span>Order</span>
                 </a>
-                <div id="collapseOrderMaster" class="collapse " aria-labelledby="headingPages"
+                <div id="collapseOrderMaster" class="collapse  {{ (request()->is('order*')) ? 'show' : ''}}" 
+                    aria-labelledby="headingPages"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Order:</h6>
                         <a class="collapse-item" href="{{ asset('theme/login.html') }}">Tambah Baru</a>
-                        <a class="collapse-item" href="{{ asset('theme/register.html') }}">Daftar Order</a>
+                        <a class="collapse-item
+                        {{ (request()->is('order/list')) ? 'active' : ''}}" 
+                        href="{{ route('list.order') }}">Daftar Order</a>
                       
                     </div>
                 </div>
