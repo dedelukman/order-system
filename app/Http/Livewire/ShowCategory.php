@@ -65,18 +65,7 @@ class ShowCategory extends Component
         }
         $this->sortField = $field;
     }
-
-     public function changeRole(Entities $entity, $akses){
-        $entity->role = $akses;
-        $entity->save();
-      
-    }
-
-    public function changeActive(Entities $entity, $akses){
-        $entity->active = $akses;
-        $entity->save();
-        
-    }
+     
 
     public function save()
     {
