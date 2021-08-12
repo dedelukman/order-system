@@ -19,7 +19,9 @@ class ShowUser extends Component
     public $titleEditModal = 'Edit';
     public Entities $editing;
     public Entities $deleting;
+    public Branch $branches;
 
+    
 
     public function rules() { 
         return [

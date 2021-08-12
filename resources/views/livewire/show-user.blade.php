@@ -156,23 +156,33 @@
                         <div class="form-group">
                             <label for="code">Nama</label>
                             <input type="text" class="form-control" id="code" aria-describedby="code"
-                            wire:model.defer="editing.code" :error="$errors->first('editing.code')"
+                            wire:model.defer="editing.name" :error="$errors->first('editing.code')" required
                             >
                           
                         </div>
                         <div class="form-group">
                             <label for="name">Email</label>
                             <input type="text" class="form-control" id="name" aria-describedby="name"
-                            wire:model.defer="editing.name"
+                            wire:model.defer="editing.email" required
                             >
                            
                         </div>
                         <div class="form-group">
-                            <label for="alamat">Alamat</label>
-                            <textarea class="form-control" id="alamat" rows="3"
-                            wire:model.defer="editing.address"
-                            ></textarea>
+                            <label for="name">Perusahaan</label>
+                            <select class="form-control" name="city_id">
+
+                                <option value="" selected>Pilih Perusahaan</option>
+
+                                {{-- @foreach($branches as $branch)
+
+                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+
+                                @endforeach --}}
+
+                            </select>
+
                         </div>
+                        
                         
                                                                   
                        
@@ -180,7 +190,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary"
-                        wire:click.prevent="save()" data-dismiss="modal"
+                        wire:click.prevent="save()" data-dismiss="modal" required
                         >Save changes</button>
                     </div>
                     </div>

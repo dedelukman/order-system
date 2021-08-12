@@ -182,27 +182,27 @@
                         <div class="form-group">
                             <label for="code">Kode</label>
                             <input type="text" class="form-control" id="code" aria-describedby="code"
-                            wire:model.defer="editing.code" :error="$errors->first('editing.code')"
+                            wire:model.defer="editing.code" :error="$errors->first('editing.code')" required
                             >
                           
                         </div>
                         <div class="form-group">
                             <label for="name">Nama</label>
                             <input type="text" class="form-control" id="name" aria-describedby="name"
-                            wire:model.defer="editing.name"
+                            wire:model.defer="editing.name" required
                             >
                            
                         </div>
                         <div class="form-group">
                             <label for="alamat">Alamat</label>
                             <textarea class="form-control" id="alamat" rows="3"
-                            wire:model.defer="editing.address"
+                            wire:model.defer="editing.address" required
                             ></textarea>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Diskon</label>
                             <div class="input-group">
-                            <input type="number" class="form-control" aria-label="discount"
+                            <input type="number" class="form-control" aria-label="discount" min="0" required
                             wire:model.defer="editing.discount">
                             <div class="input-group-append">
                                 <span class="input-group-text">%</span>                            
