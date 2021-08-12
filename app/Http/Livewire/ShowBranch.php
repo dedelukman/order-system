@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Branch;
+use App\Models\Branch as Entities;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -10,13 +10,14 @@ class ShowBranch extends Component
 {
 
     use WithPagination;
+    
 
     public $search;
     public $sortField='name';
     public $sortDirection ='desc';
     public $titleEditModal = 'Edit';
-    public Branch $editing;
-    public Branch $deleting;
+    public Entities $editing;
+    public Entities $deleting;
     
 
     public function rules() { 
@@ -29,7 +30,7 @@ class ShowBranch extends Component
     }
 
     public function makeBlankTransaction(){
-        return Branch::make();
+        return Entities::make();
     }
 
     public function create(){
@@ -37,14 +38,14 @@ class ShowBranch extends Component
         $this->titleEditModal='Tambah';
     }
 
-    public function edit(Branch $branch){
-        $this->editing = $branch;
+    public function edit(Entities $entity){
+        $this->editing = $entity;
          $this->titleEditModal='Edit';
     }
 
-    public function deleteId(Branch $branch)
+    public function deleteId(Entities $entity)
     {
-        $this->deleting = $branch;
+        $this->deleting = $entity;
     }
 
     public function delete(){
@@ -65,21 +66,21 @@ class ShowBranch extends Component
         $this->sortField = $field;
     }
 
-    public function changeActive(Branch $branch, $akses){
-        $branch->active = $akses;
-        $branch->save();
+    public function changeActive(Entities $entity, $akses){
+        $entity->active = $akses;
+        $entity->save();
         
     }
 
-    public function changePrice(Branch $branch, $akses){
-        $branch->price = $akses;
-        $branch->save();
+    public function changePrice(Entities $entity, $akses){
+        $entity->price = $akses;
+        $entity->save();
       
     }
 
-    public function changeCategory(Branch $branch, $akses){
-        $branch->category = $akses;
-        $branch->save();
+    public function changeCategory(Entities $entity, $akses){
+        $entity->category = $akses;
+        $entity->save();
         
     }
 
@@ -106,7 +107,7 @@ class ShowBranch extends Component
     public function render()
     {
         return view('livewire.show-branch', 
-        ['branches' => Branch::
+        ['entities' => Entities::
         where('code','like',"%{$this->search}%")
         ->orWhere('name','like',"%{$this->search}%")
         ->orWhere('category','like',"%{$this->search}%")

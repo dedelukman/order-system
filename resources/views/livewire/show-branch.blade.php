@@ -46,32 +46,32 @@
                                     </thead>
                                    
                                     <tbody>
-                                        @forelse($branches as $branch )
+                                        @forelse($entities as $entity )
                                             <tr wire:loading.class.delay="opacity-50">
-                                                <td>{{ $branch->code }}</td>
-                                                <td>{{ $branch->name }}</td>
+                                                <td>{{ $entity->code }}</td>
+                                                <td>{{ $entity->name }}</td>
                                                 <td>
                                                      <div class="dropdown mb-4">
                                                         <button class="btn dropdown-toggle" type="button"
                                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
-                                                            {{ $branch->category }}
+                                                            {{ $entity->category }}
                                                         </button>
                                                         <div class="dropdown-menu animated--fade-in"
                                                             aria-labelledby="dropdownMenuButton" >                                                       
-                                                            <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
+                                                            <button class="btn " type="button" wire:click="changeCategory({{ $entity->id}}, $event.target.innerText)"
                                                                    >
                                                                     PUSAT
                                                             </button>
-                                                            <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
+                                                            <button class="btn " type="button" wire:click="changeCategory({{ $entity->id}}, $event.target.innerText)"
                                                                    >
                                                                     CABANG
                                                             </button>
-                                                            <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
+                                                            <button class="btn " type="button" wire:click="changeCategory({{ $entity->id}}, $event.target.innerText)"
                                                                    >
                                                                     DISTRIBUTOR
                                                             </button> 
-                                                            <button class="btn " type="button" wire:click="changeCategory({{ $branch->id}}, $event.target.innerText)"
+                                                            <button class="btn " type="button" wire:click="changeCategory({{ $entity->id}}, $event.target.innerText)"
                                                                    >
                                                                     AGEN
                                                             </button>                                                           
@@ -83,17 +83,17 @@
                                                         <button class="btn dropdown-toggle" type="button"
                                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
-                                                            {{ $branch->price }}
+                                                            {{ $entity->price }}
                                                         </button>
                                                         <div class="dropdown-menu animated--fade-in"
                                                             aria-labelledby="dropdownMenuButton" >
-                                                            @if ($branch->price =='HJ')
-                                                                 <button class="btn " type="button" wire:click="changePrice({{ $branch->id}}, $event.target.innerText)"
+                                                            @if ($entity->price =='HJ')
+                                                                 <button class="btn " type="button" wire:click="changePrice({{ $entity->id}}, $event.target.innerText)"
                                                                    >
                                                                     HET2
                                                                 </button>
                                                             @else
-                                                                 <button class="btn " type="button" wire:click="changePrice({{ $branch->id}}, $event.target.innerText)"
+                                                                 <button class="btn " type="button" wire:click="changePrice({{ $entity->id}}, $event.target.innerText)"
                                                                    >
                                                                     HJ
                                                                 </button>
@@ -104,15 +104,15 @@
                                                     
                                                 </td>
                                                 <td style="align-content: center">
-                                                    @if ($branch->active)                                                                                                     
-                                                        <a  class="btn btn-success btn-icon-split" wire:click="changeActive({{ $branch->id}}, '0')">
+                                                    @if ($entity->active)                                                                                                     
+                                                        <a  class="btn btn-success btn-icon-split" wire:click="changeActive({{ $entity->id}}, '0')">
                                                             <span class="icon text-white-50">
                                                                 <i class="fas fa-check"></i>
                                                             </span>
                                                             <span class="text">Active</span>
                                                         </a>
                                                     @else                                                                      
-                                                         <a  class="btn btn-danger btn-icon-split" wire:click="changeActive({{ $branch->id}}, '1')">
+                                                         <a  class="btn btn-danger btn-icon-split" wire:click="changeActive({{ $entity->id}}, '1')">
                                                             <span class="icon text-white-50">
                                                                 <i class="fas fa-times"></i>
                                                             </span>
@@ -130,11 +130,11 @@
                                                         <div class="dropdown-menu animated--fade-in"
                                                             aria-labelledby="dropdownMenuButton">
                                                             <a class="dropdown-item" 
-                                                            wire:click="edit({{ $branch->id }})"
+                                                            wire:click="edit({{ $entity->id }})"
                                                             data-toggle="modal" data-target="#formModal"
                                                             >Edit</a>
                                                             <a class="dropdown-item" data-toggle="modal" data-target="#deleteModal"
-                                                            wire:click="deleteId({{ $branch->id }})"
+                                                            wire:click="deleteId({{ $entity->id }})"
                                                             >Delete</a>                                                        
                                                         </div>
                                                     </div>
@@ -160,7 +160,7 @@
                                 </table>
                             </div>
 
-                            <div class="mt-4">{{ $branches->links() }}</div>
+                            <div class="mt-4">{{ $entities->links() }}</div>
                         </div>
                     </div>
 
@@ -239,18 +239,11 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" wire:click.prevent="delete()" >Ya Saya Yakin</button>
+                <button type="button" class="btn btn-danger" wire:click.prevent="delete()" data-dismiss="modal">Ya Saya Yakin</button>
             </div>
             </div>
         </div>
         </div>
-
-   
-
-        
-            
-
-
   
 </div>
 

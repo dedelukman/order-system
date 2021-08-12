@@ -3,7 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Branch;
-use App\Models\User;
+use App\Models\User as Entities;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -14,22 +14,46 @@ class ShowUser extends Component
 
 
     public $search;
-    public $sortField='nameBranch';
-    public $sortDirection ='desc';
-    public $showEditModal = false;
-    public User $editing;
+    public $sortField='name';
+    public $sortDirection ='desc';    
+    public $titleEditModal = 'Edit';
+    public Entities $editing;
+    public Entities $deleting;
 
 
-    protected $queryString = ['sortField', 'sortDirection'];
+    public function rules() { 
+        return [
+            'editing.name' => 'required|min:3',
+            'editing.email' => 'required',
+            'editing.branch_id' => 'required',            
+        ]; 
+    }
 
-    public function rules() { return [
-        'editing.name' => 'required|min:3',
-    ]; }
+    public function makeBlankTransaction(){
+        return Entities::make();
+    }
 
-    public function edit(User $user){
-        $this->editing = $user;
-       
-        $this->showEditModal=true;
+    public function create(){
+        $this->editing =  $this->makeBlankTransaction();
+        $this->titleEditModal='Tambah';
+    }
+
+    public function edit(Entities $entity){
+        $this->editing = $entity;
+         $this->titleEditModal='Edit';
+    }
+
+    public function deleteId(Entities $entity)
+    {
+        $this->deleting = $entity;
+    }
+
+    public function delete(){
+        $this->deleting->delete();
+        $this->dispatchBrowserEvent('alert',[
+                'type'=>'success',
+                'message'=>"Data Berhasil di Delete!!"
+            ]);
     }
 
     public function sortBy($field){
@@ -42,19 +66,47 @@ class ShowUser extends Component
         $this->sortField = $field;
     }
 
+     public function changeRole(Entities $entity, $akses){
+        $entity->role = $akses;
+        $entity->save();
+      
+    }
+
+    public function changeActive(Entities $entity, $akses){
+        $entity->active = $akses;
+        $entity->save();
+        
+    }
+
+    public function save()
+    {
+        $this->validate();
+
+        try {
+            $this->editing->save();    
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'success',
+                'message'=>"Data Berhasil Disimpan!!"
+            ]);
+        } catch (\Exception $e) {
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'error',
+                'message'=>"Data Tidak Berhasil Disimpan!!"
+            ]);
+        }
+    }
+
 
     public function render()
     {
         return view('livewire.show-user', [
-            // 'users'=>User::where('name','like', "%{$this->search}%")->paginate(10)
-        'users' => DB::table('users')
-        ->join('branches', 'users.branch_id','branches.id')
+         'entities' => Entities::leftJoin('branches', 'users.branch_id','=','branches.id')    
         ->select('users.*', 'branches.name as nameBranch')
         ->where('users.name','like',"%{$this->search}%")
         ->orWhere('users.email','like',"%{$this->search}%")
         ->orWhere('branches.name','like',"%{$this->search}%")
         ->orderBy($this->sortField, $this->sortDirection)
-        ->latest()->paginate(10)
+        ->paginate(10)
         ]);
     }
 }
