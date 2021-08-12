@@ -14,10 +14,23 @@ class ShowUser extends Component
 
 
     public $search;
-
     public $sortField='nameBranch';
-
     public $sortDirection ='desc';
+    public $showEditModal = false;
+    public User $editing;
+
+
+    protected $queryString = ['sortField', 'sortDirection'];
+
+    public function rules() { return [
+        'editing.name' => 'required|min:3',
+    ]; }
+
+    public function edit(User $user){
+        $this->editing = $user;
+       
+        $this->showEditModal=true;
+    }
 
     public function sortBy($field){
 

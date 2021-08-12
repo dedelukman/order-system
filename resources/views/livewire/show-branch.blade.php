@@ -25,7 +25,7 @@
                                     </div>
                                 </form> 
                                 <div >
-                                    <button class="btn btn-primary ">
+                                    <button class="btn btn-primary " data-toggle="modal" data-target="#formModal" wire:click="create">
                                         <i class="fas fa-plus fa-sm"> New</i>
                                     </button>  
                                 </div>
@@ -36,18 +36,18 @@
                                 <table class="table table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th sortable>Kode</th>
-                                            <th>Nama</th>
-                                            <th>Kategori</th>
-                                            <th>Harga</th>
-                                            <th>Status</th>                                            
+                                            <th wire:click="sortBy('code')" ><i class="fa fa-fw fa-sort"></i>Kode</th>
+                                            <th wire:click="sortBy('name')" ><i class="fa fa-fw fa-sort"></i>Nama</th>
+                                            <th wire:click="sortBy('category')" ><i class="fa fa-fw fa-sort"></i>Kategori</th>
+                                            <th wire:click="sortBy('price')" ><i class="fa fa-fw fa-sort"></i>Harga</th>
+                                            <th wire:click="sortBy('active')" ><i class="fa fa-fw fa-sort"></i>Status</th>                                            
                                             <th></th>
                                         </tr>
                                     </thead>
                                    
                                     <tbody>
                                         @forelse($branches as $branch )
-                                            <tr>
+                                            <tr wire:loading.class.delay="opacity-50">
                                                 <td>{{ $branch->code }}</td>
                                                 <td>{{ $branch->name }}</td>
                                                 <td>
@@ -120,24 +120,25 @@
                                                         </a>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td>                                                                                                                                                       
                                                     <div class="dropdown mb-4">
-                                                        <button class="btn dropdown-toggle" type="button"
-                                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" 
-                                                            wire:click="edit({{ $branch->id }})"
+                                                        <button class="dropdown-toggle" type="button"
+                                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                             Aksi
                                                         </button>
                                                         <div class="dropdown-menu animated--fade-in"
-                                                            aria-labelledby="dropdownMenuButton" >
-                                                            <a class="dropdown-item"  data-toggle="modal" data-target="#exampleModal"
-                                                          
-                                                            >
-                                                                Edit
-                                                            </a>
-                                                            <a class="dropdown-item" href="#">Delete</a>                                                            
+                                                            aria-labelledby="dropdownMenuButton">
+                                                            <a class="dropdown-item" 
+                                                            wire:click="edit({{ $branch->id }})"
+                                                            data-toggle="modal" data-target="#formModal"
+                                                            >Edit</a>
+                                                            <a class="dropdown-item" data-toggle="modal" data-target="#deleteModal"
+                                                            wire:click="deleteId({{ $branch->id }})"
+                                                            >Delete</a>                                                        
                                                         </div>
                                                     </div>
+                                                    
                                                 </td>                                                
                                             </tr>
                                         
@@ -163,49 +164,88 @@
                         </div>
                     </div>
 
-        <!-- Modal -->
-        <form action="">
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+        <!-- Modal Form-->
+        <form action="">            
+            <div wire:ignore.self class="modal fade" id="formModal"
+             tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+                <div class="modal-dialog" wire:loading.class.delay="opacity-50">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                        <h5 class="modal-title" id="formModalLabel">
+                            {{ $titleEditModal }}
+                             Data</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Kode</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                            <label for="code">Kode</label>
+                            <input type="text" class="form-control" id="code" aria-describedby="code"
+                            wire:model.defer="editing.code" :error="$errors->first('editing.code')"
+                            >
                           
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Nama</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                            <label for="name">Nama</label>
+                            <input type="text" class="form-control" id="name" aria-describedby="name"
                             wire:model.defer="editing.name"
                             >
                            
                         </div>
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Alamat</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <label for="alamat">Alamat</label>
+                            <textarea class="form-control" id="alamat" rows="3"
+                            wire:model.defer="editing.address"
+                            ></textarea>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Diskon</label>
-                            <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                            <div class="input-group">
+                            <input type="number" class="form-control" aria-label="discount"
+                            wire:model.defer="editing.discount">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>                            
+                            </div>
+                        </div>      
                            
-                        </div>                                                
+                        </div>
+                                                                  
                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary"
+                        wire:click.prevent="save()" data-dismiss="modal"
+                        >Save changes</button>
                     </div>
                     </div>
                 </div>
             </div>        
         </form>
+
+        <!-- Modal Delete-->
+        <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header bg-red-400">
+                <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda Yakin Akan menghapus Data Ini!!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" wire:click.prevent="delete()" >Ya Saya Yakin</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+   
 
         
             

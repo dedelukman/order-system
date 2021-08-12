@@ -18,7 +18,7 @@ class CreateBranchesTable extends Migration
             $table->string('code')->unique();
             $table->string('name')->unique();
             $table->string('address')->nullable();        
-            $table->string('category')->default('cabang');
+            $table->string('category')->default('AGEN');
             $table->string('price')->default('HET2');
             $table->decimal('discount');
             $table->boolean('active')->default(false);
