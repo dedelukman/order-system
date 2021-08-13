@@ -167,24 +167,19 @@
                             >
                            
                         </div>
-                        <div class="form-group">
+                        
+                         <div class="form-group">
                             <label for="name">Perusahaan</label>
-                            <select class="form-control" name="city_id">
-
+                           
+                              <select class="form-control" name="city_id" wire:model.defer="editing.branch_id">
                                 <option value="" selected>Pilih Perusahaan</option>
-
-                                {{-- @foreach($branches as $branch)
-
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-
-                                @endforeach --}}
-
-                            </select>
-
-                        </div>
                         
-                        
-                                                                  
+                                @foreach ($dropdown as $item)
+                                    <option value="{{ $item->id }}" >{{ $item->name }}</option>
+                                @endforeach
+                                                                
+                            </select>                         
+                        </div>                                                                                       
                        
                     </div>
                     <div class="modal-footer">

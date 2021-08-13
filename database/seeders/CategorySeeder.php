@@ -30,31 +30,38 @@ class CategorySeeder extends Seeder
             'name'=>'Eye Make Up',
             'photo'=>'',
             'slug'=>'eye-make-up',            
-        ]);
+        ]);        
          \App\Models\Category::create([            
             'code'=>'04',
-            'name'=>'Skin Care',
-            'photo'=>'',
-            'slug'=>'skin-care',            
-        ]);
-         \App\Models\Category::create([            
-            'code'=>'05',
             'name'=>'Lips Make Up',
             'photo'=>'',
             'slug'=>'lips-make-up',            
         ]);
-         \App\Models\Category::create([            
-            'code'=>'06',
-            'name'=>'Body Care',
+        \App\Models\Category::create([            
+            'code'=>'05',
+            'name'=>'Skin Care',
             'photo'=>'',
-            'slug'=>'body-care',            
+            'slug'=>'skin-care',            
         ]);
         \App\Models\Category::create([            
-            'code'=>'07',
+            'code'=>'06',
             'name'=>'Body Parfume',
             'photo'=>'',
             'slug'=>'body-parfume',            
         ]);
+         \App\Models\Category::create([            
+            'code'=>'07',
+            'name'=>'',
+            'photo'=>'',
+            'slug'=>'',            
+        ]);
+         \App\Models\Category::create([            
+            'code'=>'08',
+            'name'=>'Body Care',
+            'photo'=>'',
+            'slug'=>'body-care',            
+        ]);
+        
          \App\Models\Category::create([            
             'code'=>'09',
             'name'=>'Accesssories & Others',

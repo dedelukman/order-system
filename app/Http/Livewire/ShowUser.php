@@ -19,9 +19,11 @@ class ShowUser extends Component
     public $titleEditModal = 'Edit';
     public Entities $editing;
     public Entities $deleting;
-    public Branch $branches;
+    public $dropdown;
 
-    
+    public function mount(){
+        $this->dropdown = Branch::all();
+    }
 
     public function rules() { 
         return [
@@ -41,7 +43,7 @@ class ShowUser extends Component
     }
 
     public function edit(Entities $entity){
-        $this->editing = $entity;
+         $this->editing = $entity;
          $this->titleEditModal='Edit';
     }
 
