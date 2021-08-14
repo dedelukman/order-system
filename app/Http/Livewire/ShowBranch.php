@@ -15,15 +15,14 @@ class ShowBranch extends Component
     public $search;
     public $sortField='name';
     public $sortDirection ='desc';
-    public $titleEditModal = 'Edit';
-    public $closeModal = false;
+    public $titleEditModal = 'Edit';    
     public Entities $editing;
     public Entities $deleting;    
     
 
     protected $rules = [
-            'editing.code' => 'required|min:3|unique:branches as editing',
-            'editing.name' => 'required|unique:branches as editing',
+            'editing.code' => 'required|min:3',
+            'editing.name' => 'required',
             'editing.address' => 'required',
             'editing.discount' => 'required',
         ]; 
@@ -85,8 +84,7 @@ class ShowBranch extends Component
     }
 
     public function save()
-    {
-        $this->closeModal =false;
+    {        
         $this->validate();
         
 

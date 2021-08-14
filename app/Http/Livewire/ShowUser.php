@@ -16,7 +16,7 @@ class ShowUser extends Component
     public $search;
     public $sortField='name';
     public $sortDirection ='desc';    
-    public $titleEditModal = 'Edit';
+    public $titleEditModal = 'Edit';    
     public Entities $editing;
     public Entities $deleting;
     public $dropdown;
@@ -28,7 +28,7 @@ class ShowUser extends Component
     public function rules() { 
         return [
             'editing.name' => 'required|min:3',
-            'editing.email' => 'required',
+            'editing.email' => 'required|email',
             'editing.branch_id' => 'required',            
         ]; 
     }
@@ -92,6 +92,7 @@ class ShowUser extends Component
                 'type'=>'success',
                 'message'=>"Data Berhasil Disimpan!!"
             ]);
+            $this->dispatchBrowserEvent('closeModal'); 
         } catch (\Exception $e) {
             $this->dispatchBrowserEvent('alert',[
                 'type'=>'error',
