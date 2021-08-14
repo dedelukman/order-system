@@ -155,7 +155,40 @@
                                                                 
                             </select>
                             @error('editing.category_id') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror                         
-                        </div>                         
+                        </div>  
+                         <div class="form-group">
+                            <label for="exampleInputEmail1">Harga Cabang <small>belum ppn</small></label>
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Rp</span>                            
+                                </div>
+                                <input type="number" class="form-control" aria-label="discount" min="0"  required
+                                wire:model.defer="editing.hj">
+                                
+                                @error('editing.hj') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                            </div>      
+                           
+                        </div>   
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Harga Distributor <small>sudah ppn</small></label>
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Rp</span>                            
+                                </div>
+                                <input type="number" class="form-control" aria-label="discount" min="0"  required
+                                wire:model.defer="editing.het2">
+                                
+                                @error('editing.het2') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                            </div>      
+                           
+                        </div>  
+                        <div class="form-group">
+                            <label for="alamat">Deskripsi</label>
+                            <textarea class="form-control" id="alamat" rows="3"
+                            wire:model.defer="editing.description" required
+                            ></textarea>
+                             @error('editing.description') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                        </div>                        
                         
                         
                                                                   

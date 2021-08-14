@@ -6,6 +6,7 @@ use App\Models\Category;
 use Livewire\Component;
 use App\Models\Product as Entities;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 
 
 class ShowProduct extends Component
@@ -23,7 +24,7 @@ class ShowProduct extends Component
     
 
     public function mount(){
-        $this->dropdown = Category::all();
+        $this->dropdown = Category::where('name','!=','')->get();
     }
 
     public function rules() { 
@@ -31,6 +32,9 @@ class ShowProduct extends Component
             'editing.code' => 'required|min:3',
             'editing.name' => 'required',
             'editing.category_id' => 'required',            
+            'editing.hj' => 'required',            
+            'editing.het2' => 'required',            
+            'editing.description' => 'required',            
         ]; 
     }
 
@@ -86,6 +90,7 @@ class ShowProduct extends Component
     public function save()
     {
         $this->validate();
+        $this->editing->slug = Str::slug($this->editing->name,'-');
 
         try {
             $this->editing->save();    
@@ -93,6 +98,7 @@ class ShowProduct extends Component
                 'type'=>'success',
                 'message'=>"Data Berhasil Disimpan!!"
             ]);
+            $this->dispatchBrowserEvent('closeModal'); 
         } catch (\Exception $e) {
             $this->dispatchBrowserEvent('alert',[
                 'type'=>'error',

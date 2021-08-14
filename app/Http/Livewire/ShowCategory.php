@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Category as Entities;
+use Illuminate\Support\Str;
 
 class ShowCategory extends Component
 {
@@ -25,7 +26,7 @@ class ShowCategory extends Component
         return [
             'editing.code' => 'required|min:2',
             'editing.name' => 'required',
-            'editing.photo' => 'required',            
+                       
         ]; 
     }
 
@@ -70,6 +71,7 @@ class ShowCategory extends Component
     public function save()
     {
         $this->validate();
+        $this->editing->slug = Str::slug($this->editing->name,'-');
 
         try {
             $this->editing->save();    
