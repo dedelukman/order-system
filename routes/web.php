@@ -15,13 +15,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'dashboard');
 
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+   Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+   Route::get('/customer/branch', \App\Http\Livewire\ShowBranch::class)->name('branch');
+   Route::get('/customer/user', \App\Http\Livewire\ShowUser::class)->name('user');
+   Route::get('/product/category', \App\Http\Livewire\ShowCategory::class)->name('category');
+   Route::get('/product/detail', \App\Http\Livewire\ShowProduct::class)->name('product');
+   Route::get('/order/list', \App\Http\Livewire\ShowOrder::class)->name('list.order');
 
-Route::get('/customer/branch', \App\Http\Livewire\ShowBranch::class)->name('branch');
-Route::get('/customer/user', \App\Http\Livewire\ShowUser::class)->name('user');
-Route::get('/product/category', \App\Http\Livewire\ShowCategory::class)->name('category');
-Route::get('/product/detail', \App\Http\Livewire\ShowProduct::class)->name('product');
-Route::get('/order/list', \App\Http\Livewire\ShowOrder::class)->name('list.order');
+
+});
