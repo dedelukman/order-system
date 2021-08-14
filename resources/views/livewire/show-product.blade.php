@@ -130,34 +130,32 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="code">kode</label>
+                            <label for="code">Kode</label>
                             <input type="text" class="form-control" id="code" aria-describedby="code"
-                            wire:model.defer="editing.name" :error="$errors->first('editing.code')" required
+                            wire:model.defer="editing.code" :error="$errors->first('editing.code')" required
                             >
-                          
+                            @error('editing.code') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
                         </div>
                         <div class="form-group">
-                            <label for="name">Email</label>
+                            <label for="name">Nama</label>
                             <input type="text" class="form-control" id="name" aria-describedby="name"
-                            wire:model.defer="editing.email" required
+                            wire:model.defer="editing.name" required
                             >
+                           @error('editing.name') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                        </div>
+                         <div class="form-group">
+                            <label for="name">Kategori</label>
                            
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Perusahaan</label>
-                            <select class="form-control" name="city_id">
-
-                                <option value="" selected>Pilih Perusahaan</option>
-
-                                {{-- @foreach($branches as $branch)
-
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-
-                                @endforeach --}}
-
+                              <select class="form-control" name="city_id" wire:model.defer="editing.category_id">
+                                <option value="" selected>Pilih Kategori</option>
+                        
+                                @foreach ($dropdown as $item)
+                                    <option value="{{ $item->id }}" >{{ $item->name }}</option>
+                                @endforeach
+                                                                
                             </select>
-
-                        </div>
+                            @error('editing.category_id') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror                         
+                        </div>                         
                         
                         
                                                                   
@@ -166,7 +164,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary"
-                        wire:click.prevent="save()" data-dismiss="modal" required
+                        wire:click.prevent="save()"  
                         >Save changes</button>
                     </div>
                     </div>

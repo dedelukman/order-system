@@ -85,8 +85,7 @@ class ShowBranch extends Component
 
     public function save()
     {        
-        $this->validate();
-        
+        $this->validate();        
 
         try {
             $this->editing->save();    

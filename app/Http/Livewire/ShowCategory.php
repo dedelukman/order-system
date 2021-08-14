@@ -77,6 +77,7 @@ class ShowCategory extends Component
                 'type'=>'success',
                 'message'=>"Data Berhasil Disimpan!!"
             ]);
+             $this->dispatchBrowserEvent('closeModal'); 
         } catch (\Exception $e) {
             $this->dispatchBrowserEvent('alert',[
                 'type'=>'error',

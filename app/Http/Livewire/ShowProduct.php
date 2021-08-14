@@ -2,10 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Category;
 use Livewire\Component;
 use App\Models\Product as Entities;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
+
 
 class ShowProduct extends Component
 {
@@ -18,15 +19,18 @@ class ShowProduct extends Component
     public $titleEditModal = 'Edit';
     public Entities $editing;
     public Entities $deleting;
+    public $dropdown;
     
 
-    
+    public function mount(){
+        $this->dropdown = Category::all();
+    }
 
     public function rules() { 
         return [
-            'editing.name' => 'required|min:3',
-            'editing.email' => 'required',
-            'editing.branch_id' => 'required',            
+            'editing.code' => 'required|min:3',
+            'editing.name' => 'required',
+            'editing.category_id' => 'required',            
         ]; 
     }
 

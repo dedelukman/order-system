@@ -6,7 +6,6 @@ use App\Models\Branch;
 use App\Models\User as Entities;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
 
 class ShowUser extends Component
 {

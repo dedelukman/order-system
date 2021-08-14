@@ -111,16 +111,16 @@
                         <div class="form-group">
                             <label for="code">Kode</label>
                             <input type="text" class="form-control" id="code" aria-describedby="code"
-                            wire:model.defer="editing.code" :error="$errors->first('editing.code')" required
+                            wire:model.defer="editing.code"  required
                             >
-                          
+                           @error('editing.code') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
                         </div>
                         <div class="form-group">
                             <label for="name">Nama</label>
                             <input type="text" class="form-control" id="name" aria-describedby="name"
                             wire:model.defer="editing.name" required
                             >
-                           
+                           @error('editing.name') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
                         </div>
                         
                         {{-- FOTO NEXT --}}
@@ -131,7 +131,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary"
-                        wire:click.prevent="save()" data-dismiss="modal" required
+                        wire:click.prevent="save()" 
                         >Save changes</button>
                     </div>
                     </div>
