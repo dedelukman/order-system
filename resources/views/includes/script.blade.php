@@ -33,5 +33,10 @@
           })
      })
      </script>
+     <script>
+          window.addEventListener('closeModal', event => {
+               $("#formModal").modal('hide');                
+          })
+     </script>
 
 

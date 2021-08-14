@@ -16,18 +16,18 @@ class ShowBranch extends Component
     public $sortField='name';
     public $sortDirection ='desc';
     public $titleEditModal = 'Edit';
+    public $closeModal = false;
     public Entities $editing;
-    public Entities $deleting;
+    public Entities $deleting;    
     
 
-    public function rules() { 
-        return [
-            'editing.code' => 'required|min:3',
-            'editing.name' => 'required',
+    protected $rules = [
+            'editing.code' => 'required|min:3|unique:branches as editing',
+            'editing.name' => 'required|unique:branches as editing',
             'editing.address' => 'required',
             'editing.discount' => 'required',
         ]; 
-    }
+       
 
     public function makeBlankTransaction(){
         return Entities::make();
@@ -86,7 +86,9 @@ class ShowBranch extends Component
 
     public function save()
     {
+        $this->closeModal =false;
         $this->validate();
+        
 
         try {
             $this->editing->save();    
@@ -94,12 +96,14 @@ class ShowBranch extends Component
                 'type'=>'success',
                 'message'=>"Data Berhasil Disimpan!!"
             ]);
+            $this->dispatchBrowserEvent('closeModal'); 
         } catch (\Exception $e) {
             $this->dispatchBrowserEvent('alert',[
                 'type'=>'error',
                 'message'=>"Data Tidak Berhasil Disimpan!!"
             ]);
         }
+
     }
 
  

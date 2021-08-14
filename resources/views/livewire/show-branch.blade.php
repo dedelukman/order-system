@@ -137,6 +137,7 @@
                                                             wire:click="deleteId({{ $entity->id }})"
                                                             >Delete</a>                                                        
                                                         </div>
+                                                       
                                                     </div>
                                                     
                                                 </td>                                                
@@ -165,7 +166,7 @@
                     </div>
 
         <!-- Modal Form-->
-        <form action="">            
+        <form wire:submit.prevent="save()" action="#" method="POST">            
             <div wire:ignore.self class="modal fade" id="formModal"
              tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
                 <div class="modal-dialog" wire:loading.class.delay="opacity-50">
@@ -182,8 +183,9 @@
                         <div class="form-group">
                             <label for="code">Kode</label>
                             <input type="text" class="form-control" id="code" aria-describedby="code"
-                            wire:model.defer="editing.code" :error="$errors->first('editing.code')" required
-                            >
+                             required wire:model.defer="editing.code"
+                            > 
+                           @error('editing.code') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
                           
                         </div>
                         <div class="form-group">
@@ -191,6 +193,7 @@
                             <input type="text" class="form-control" id="name" aria-describedby="name"
                             wire:model.defer="editing.name" required
                             >
+                             @error('editing.name') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
                            
                         </div>
                         <div class="form-group">
@@ -198,16 +201,18 @@
                             <textarea class="form-control" id="alamat" rows="3"
                             wire:model.defer="editing.address" required
                             ></textarea>
+                             @error('editing.address') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Diskon</label>
                             <div class="input-group">
-                            <input type="number" class="form-control" aria-label="discount" min="0" required
-                            wire:model.defer="editing.discount">
-                            <div class="input-group-append">
-                                <span class="input-group-text">%</span>                            
-                            </div>
-                        </div>      
+                                <input type="number" class="form-control" aria-label="discount" min="0" max="100" required
+                                wire:model.defer="editing.discount">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>                            
+                                </div>
+                                @error('editing.discount') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                            </div>      
                            
                         </div>
                                                                   
@@ -215,8 +220,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary"
-                        wire:click.prevent="save()" data-dismiss="modal"
+                        <button type="sumbit" class="btn btn-primary"                       
                         >Save changes</button>
                     </div>
                     </div>
@@ -226,24 +230,28 @@
 
         <!-- Modal Delete-->
         <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header bg-red-400">
-                <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda Yakin Akan menghapus Data Ini!!
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" wire:click.prevent="delete()" data-dismiss="modal">Ya Saya Yakin</button>
-            </div>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-red-400">
+                        <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Apakah Anda Yakin Akan menghapus Data Ini!!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" wire:click.prevent="delete()" data-dismiss="modal">Ya Saya Yakin</button>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
+
+       
+
+        
   
 </div>
 
