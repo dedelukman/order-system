@@ -2,18 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Branch;
 use Livewire\Component;
-use App\Models\Order as Entities;
-use App\Models\User;
+use App\Models\Product;
+use App\Models\OrderDetail as Entities;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
 
-
-
-class ShowOrder extends Component
+class CreateOrder extends Component
 {
-    use WithPagination;
+     use WithPagination;
 
 
     public $search;
@@ -22,13 +19,11 @@ class ShowOrder extends Component
     public $titleEditModal = 'Edit';
     public Entities $editing;
     public Entities $deleting;
-    public $dropdownBranch;
-    public $dropdownUser;
+    public $dropdown;    
     
 
     public function mount(){
-        $this->dropdownBranch = Branch::where('active','==','1')->get();
-        $this->dropdownUser = User::where('active','==','1')->get();
+        $this->dropdown = Product::where('active','==','1')->get();        
     }
 
     public function rules() { 
@@ -111,14 +106,14 @@ class ShowOrder extends Component
 
     public function render()
     {
-        return view('livewire.show-order', [
-         'entities' => Entities::leftJoin('branches', 'orders.branch_id','=','branches.id')    
-        ->leftJoin('users', 'orders.user_id','=','users.id')  
-        ->select('orders.*', 'branches.name as nameBranch', 'users.name as nameUser')
-        ->where('orders.code','like',"%{$this->search}%")
-        ->orWhere('orders.status','like',"%{$this->search}%")
-        ->orWhere('branches.name','like',"%{$this->search}%")
-        ->orWhere('users.name','like',"%{$this->search}%")
+        return view('livewire.create-order', [
+         'entities' => Entities::leftJoin('products', 'order_details.product_id','=','products.id')            
+        ->select('order_details.*', 'products.name as nameProduct')
+        ->where('products.name','like',"%{$this->search}%")
+        ->orWhere('order_details.quantity','like',"%{$this->search}%")
+        ->orWhere('order_details.price','like',"%{$this->search}%")
+        ->orWhere('order_details.diskon','like',"%{$this->search}%")        
+        ->orWhere('order_details.total','like',"%{$this->search}%")        
         ->orderBy($this->sortField, $this->sortDirection)
         ->paginate(10)
         ]);

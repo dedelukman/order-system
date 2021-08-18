@@ -1,13 +1,13 @@
 <div>
     
     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Daftar Order</h1>
-                    <p class="mb-4">Daftar data order Cabang, Distributor dan Agen.</p>
+                    <h1 class="h3 mb-2 text-gray-800">Tambah Order</h1>
+                    <p class="mb-4">Tambah order Cabang, Distributor dan Agen.</p>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Daftar Data</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Daftar Data Detail</h6>
                         </div>
                         <div class="card-body">
                             <!-- Topbar Search -->
@@ -36,12 +36,11 @@
                                 <table class="table table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th wire:click="sortBy('code')" ><i class="fa fa-fw fa-sort"></i>No Order</th>
-                                            <th wire:click="sortBy('nameBranch')" ><i class="fa fa-fw fa-sort"></i>Customer</th>
-                                            <th wire:click="sortBy('nameUser')" ><i class="fa fa-fw fa-sort"></i>User</th>  
-                                            {{-- <th wire:click="sortBy('bruto')" ><i class="fa fa-fw fa-sort"></i>Bruto</th> --}}
-                                            <th wire:click="sortBy('netto')" ><i class="fa fa-fw fa-sort"></i>Netto</th>
-                                            <th wire:click="sortBy('status')" ><i class="fa fa-fw fa-sort"></i>Status</th>                                            
+                                            <th wire:click="sortBy('nameProduct')" ><i class="fa fa-fw fa-sort"></i>Produk</th>
+                                            <th wire:click="sortBy('quantity')" ><i class="fa fa-fw fa-sort"></i>Qty</th>                                              
+                                            <th wire:click="sortBy('price')" ><i class="fa fa-fw fa-sort"></i>Harga</th>
+                                            <th wire:click="sortBy('diskon')" ><i class="fa fa-fw fa-sort"></i>Diskon</th>                                            
+                                            <th wire:click="sortBy('total')" ><i class="fa fa-fw fa-sort"></i>Total</th>                                            
                                             <th wire:click="sortBy('created_at')" ><i class="fa fa-fw fa-sort"></i>Dibuat</th>                                            
                                             <th></th>
                                         </tr>
@@ -49,13 +48,12 @@
                                    
                                     <tbody>
                                         @forelse($entities as $entity )
-                                            <tr wire:loading.class.delay="opacity-50">
-                                                <td>{{ $entity->code }}</td>
-                                                <td>{{ $entity->nameBranch }}</td>
-                                                <td>{{ $entity->nameUser}}</td>
-                                                {{-- <td>Rp {{ number_format($entity->bruto , 0, ',', '.') }}</td> --}}
-                                                <td>Rp {{ number_format($entity->netto , 0, ',', '.') }}</td>                                                
-                                                <td>{{ $entity->status}}</td>
+                                            <tr wire:loading.class.delay="opacity-50">                                                
+                                                <td>{{ $entity->nameProduct }}</td>
+                                                <td>{{ $entity->quantity}}</td>
+                                                <td>Rp {{ number_format($entity->price , 0, ',', '.') }}</td>
+                                                <td>{{ $entity->diskon}}</td>
+                                                <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                                                               
                                                 <td>{{ $entity->created_at->diffForHumans()}}</td>                                                                                             
                                                 <td>                                                                                                                                                       
                                                     <div class="dropdown mb-4">
@@ -136,7 +134,7 @@
                               <select class="form-control" name="city_id" wire:model.defer="editing.category_id">
                                 <option value="" selected>Pilih Kategori</option>
                         
-                                @foreach ($dropdownBranch as $item)
+                                @foreach ($dropdown as $item)
                                     <option value="{{ $item->id }}" >{{ $item->name }}</option>
                                 @endforeach
                                                                 

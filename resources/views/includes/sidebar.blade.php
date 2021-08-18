@@ -81,7 +81,9 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Order:</h6>
-                        <a class="collapse-item" href="{{ asset('theme/login.html') }}">Tambah Baru</a>
+                        <a class="collapse-item" 
+                        {{ (request()->is('order/create')) ? 'active' : ''}}" 
+                        href="{{ route('create.order') }}">Tambah Order</a>
                         <a class="collapse-item
                         {{ (request()->is('order/list')) ? 'active' : ''}}" 
                         href="{{ route('list.order') }}">Daftar Order</a>
