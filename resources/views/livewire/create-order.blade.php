@@ -113,67 +113,70 @@
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="code">Kode</label>
-                            <input type="text" class="form-control" id="code" aria-describedby="code"
-                            wire:model.defer="editing.code" :error="$errors->first('editing.code')" required
-                            >
-                            @error('editing.code') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Nama</label>
-                            <input type="text" class="form-control" id="name" aria-describedby="name"
-                            wire:model.defer="editing.name" required
-                            >
-                           @error('editing.name') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
-                        </div>
+                    <div class="modal-body">                       
                          <div class="form-group">
-                            <label for="name">Kategori</label>
+                            <label for="name">Produk</label>
                            
-                              <select class="form-control" name="city_id" wire:model.defer="editing.category_id">
-                                <option value="" selected>Pilih Kategori</option>
+                              <select class="form-control" name="city_id" wire:model.defer="editing.product_id">
+                                <option value="" selected>Pilih Produk</option>
                         
                                 @foreach ($dropdown as $item)
                                     <option value="{{ $item->id }}" >{{ $item->name }}</option>
                                 @endforeach
                                                                 
                             </select>
-                            @error('editing.category_id') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror                         
-                        </div>  
+                            @error('editing.product_id') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror                         
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Kuantitas</label>
+                            <div class="input-group">                            
+                                <input type="number" class="form-control" aria-label="quantity" min="0"  required
+                                wire:model.defer="editing.quantity">
+                                    <div class="input-group-append">
+                                    <span class="input-group-text">Unit</span>                            
+                                </div>
+                                @error('editing.quantity') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                            </div>      
+                           
+                        </div>     
                          <div class="form-group">
-                            <label for="exampleInputEmail1">Harga Cabang <small>belum ppn</small></label>
+                            <label for="exampleInputEmail1">Harga</label>
                             <div class="input-group">
                                 <div class="input-group-append">
                                     <span class="input-group-text">Rp</span>                            
                                 </div>
-                                <input type="number" class="form-control" aria-label="discount" min="0"  required
-                                wire:model.defer="editing.hj">
+                                <input type="number" class="form-control" aria-label="price" min="0"  required
+                                wire:model.defer="editing.price">
                                 
-                                @error('editing.hj') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                                @error('editing.price') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
                             </div>      
                            
                         </div>   
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Harga Distributor <small>sudah ppn</small></label>
+                            <label for="exampleInputEmail1">Diskon</label>
                             <div class="input-group">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Rp</span>                            
-                                </div>
-                                <input type="number" class="form-control" aria-label="discount" min="0"  required
-                                wire:model.defer="editing.het2">
                                 
-                                @error('editing.het2') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                                <input type="number" class="form-control" aria-label="discount" min="0"  required
+                                wire:model.defer="editing.discount">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>                            
+                                </div>
+                                @error('editing.diskon') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
                             </div>      
                            
                         </div>  
                         <div class="form-group">
-                            <label for="alamat">Deskripsi</label>
-                            <textarea class="form-control" id="alamat" rows="3"
-                            wire:model.defer="editing.description" required
-                            ></textarea>
-                             @error('editing.description') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
-                        </div>                        
+                            <label for="exampleInputEmail1">Total</label>
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Rp</span>                            
+                                </div>
+                                <input type="number" class="form-control" aria-label="total" min="0"  required
+                                wire:model.defer="editing.total">
+                                
+                                @error('editing.total') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                            </div>                                 
+                        </div>                      
                         
                         
                                                                   

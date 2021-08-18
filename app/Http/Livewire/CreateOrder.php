@@ -28,10 +28,11 @@ class CreateOrder extends Component
 
     public function rules() { 
         return [
-            'editing.code' => 'required',
-            'editing.branch_id' => 'required',
-            'editing.user_id' => 'required',            
-            'editing.status' => 'required',                                 
+            'editing.product_id' => 'required',            
+            'editing.quantity' => 'required',            
+            'editing.price' => 'required',                                 
+            'editing.discount' => 'required',                                 
+            'editing.total' => 'required',                                 
         ]; 
     }
 
