@@ -15,8 +15,8 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('branch_id');
-            $table->foreignId('user_id');
+            $table->foreignId('branch_id')->references('id')->on('branches');
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->string('code')->unique();
             $table->string('status')->default("PENDING");
             $table->text('description')->nullable();
