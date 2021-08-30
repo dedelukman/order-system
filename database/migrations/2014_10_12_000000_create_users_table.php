@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable(); 
 
-            $table->foreignId('branch_id')->nullable()->index();
+            $table->foreignId('branch_id')->references('id')->on('branches');
             $table->string('role')->default('USER');
             $table->boolean('active')->default(false);
 

@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([
+            BranchSeeder::class,          
+        ]);
         \App\Models\User::factory(20)->create();
          \App\Models\User::create([            
             'name'=>'Dede',
@@ -33,7 +36,6 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now()
         ]);
         $this->call([
-        BranchSeeder::class,
         CategorySeeder::class,
         ProductSeeder::class,
         OrderSeeder::class,
