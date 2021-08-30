@@ -4,6 +4,37 @@
                     <h1 class="h3 mb-2 text-gray-800">Tambah Order</h1>
                     <p class="mb-4">Tambah order Cabang, Distributor dan Agen.</p>
 
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Form Master</h6>
+                        </div>
+                        <div class="card-body">                            
+                            <form>
+                                <div class="mb-3"><label for="code">No Order</label>
+                                    <input class="form-control" id="code" type="text" placeholder="No Order" wire:model="code"></div>
+                                <div class="mb-3">
+                                    <label for="branch">Pelanggan</label>
+                                    <select class="form-control" name="branch" wire:model="branch">
+                                        <option value="" selected>Pilih Pelanggan</option>
+                                
+                                        @foreach ($dropdownMaster as $item)
+                                            <option value="{{ $item->id }}" >{{ $item->name }}</option>
+                                        @endforeach
+                                                                        
+                                    </select>
+                                    @error('branch_id') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror                         
+                                </div>
+                                
+                                <div class="mb-0"><label for="description">Keterangan</label>
+                                    <textarea class="form-control" id="description" rows="3" wire:model="description"></textarea></div>
+
+                                    <button type="button" class="btn btn-primary"
+                        wire:click.prevent="saveForm()"  
+                        >Save changes</button>
+                            </form>
+                        </div>
+                    </div>
+
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">

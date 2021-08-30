@@ -27,8 +27,8 @@ class ShowOrder extends Component
     
 
     public function mount(){
-        $this->dropdownBranch = Branch::where('active','==','1')->get();
-        $this->dropdownUser = User::where('active','==','1')->get();
+        $this->dropdownBranch = Branch::where('active','1')->get();
+        $this->dropdownUser = User::where('active','1')->get();
     }
 
     public function rules() { 

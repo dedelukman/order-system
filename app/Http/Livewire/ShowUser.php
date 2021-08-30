@@ -21,7 +21,7 @@ class ShowUser extends Component
     public $dropdown;
 
     public function mount(){
-        $this->dropdown = Branch::all();
+        $this->dropdown = Branch::where('active','1')->get();
     }
 
     public function rules() { 

@@ -2,15 +2,22 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Branch;
+use App\Models\Order;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\OrderDetail as Entities;
+use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
 
 class CreateOrder extends Component
 {
-     use WithPagination;
+    use WithPagination;
+
+    public $code;
+    public $branch;
+    public $description;
 
 
     public $search;
@@ -19,11 +26,32 @@ class CreateOrder extends Component
     public $titleEditModal = 'Edit';
     public Entities $editing;
     public Entities $deleting;
+    public $dropdownMaster;    
     public $dropdown;    
     
 
     public function mount(){
-        $this->dropdown = Product::where('active','==','1')->get();        
+        $this->dropdown = Product::where('active','1')->get();        
+        $this->dropdownMaster = Branch::where('active','1')->get();        
+    }
+
+    public function saveForm(){
+        $data = $this->validate([
+            'code' => 'required',
+            'branch' => 'required',
+            
+        ]);
+        
+
+        Order::Create([
+            
+            'code' => (Branch::find($this->branch)->category =="DISTRIBUTOR" ? "OD" : 
+            (Branch::find($this->branch)->category =="AGEN" ? "OA" : "OC") ) 
+            ."/".Branch::find($this->branch)->code."/".date("ymdhi") ,
+            'branch_id' => $data['branch'],
+            'description' => $this->description,
+            'user_id' => Auth::id(),
+        ]);
     }
 
     public function rules() { 
