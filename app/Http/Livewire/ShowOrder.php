@@ -6,8 +6,9 @@ use App\Models\Branch;
 use Livewire\Component;
 use App\Models\Order as Entities;
 use App\Models\User;
+use Illuminate\Routing\Route;
 use Livewire\WithPagination;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -18,25 +19,21 @@ class ShowOrder extends Component
 
     public $search;
     public $sortField='code';
-    public $sortDirection ='desc';    
-    public $titleEditModal = 'Edit';
+    public $sortDirection ='desc';      
     public Entities $editing;
     public Entities $deleting;
     public $dropdownBranch;
-    public $dropdownUser;
+
     
 
     public function mount(){
-        $this->dropdownBranch = Branch::where('active','1')->get();
-        $this->dropdownUser = User::where('active','1')->get();
+        $this->dropdownBranch = Branch::where('active','1')->get();        
     }
 
     public function rules() { 
-        return [
-            'editing.code' => 'required',
-            'editing.branch_id' => 'required',
-            'editing.user_id' => 'required',            
-            'editing.status' => 'required',                                 
+        return [                     
+            'editing.branch_id' => 'required',            
+            'editing.description' => 'required',                                                        
         ]; 
     }
 
@@ -45,15 +42,10 @@ class ShowOrder extends Component
     }
 
     public function create(){
-        $this->editing =  $this->makeBlankTransaction();
-        $this->titleEditModal='Tambah';
+        $this->editing =  $this->makeBlankTransaction(); 
     }
 
-    public function edit(Entities $entity){
-        $this->editing = $entity;
-         $this->titleEditModal='Edit';
-    }
-
+    
     public function deleteId(Entities $entity)
     {
         $this->deleting = $entity;
@@ -77,30 +69,21 @@ class ShowOrder extends Component
         $this->sortField = $field;
     }
 
-     public function changeRole(Entities $entity, $akses){
-        $entity->role = $akses;
-        $entity->save();
-      
-    }
-
-    public function changeActive(Entities $entity, $akses){
-        $entity->active = $akses;
-        $entity->save();
-        
-    }
-
+    
     public function save()
     {
         $this->validate();
-        $this->editing->slug = Str::slug($this->editing->name,'-');
+        $this->editing->code = (Branch::find($this->editing->branch_id)->category =="DISTRIBUTOR" ? "OD" : 
+        (Branch::find($this->editing->branch_id)->category =="AGEN" ? "OA" : "OC") ) 
+        ."/".Branch::find($this->editing->branch_id)->code."/".date("ymdhi") ;
+        $this->editing->user_id = Auth::id();
+
+    
 
         try {
             $this->editing->save();    
-            $this->dispatchBrowserEvent('alert',[
-                'type'=>'success',
-                'message'=>"Data Berhasil Disimpan!!"
-            ]);
-            $this->dispatchBrowserEvent('closeModal'); 
+            $this->dispatchBrowserEvent('closeModal');             
+            return Redirect()->route('create.order',$this->editing);            
         } catch (\Exception $e) {
             $this->dispatchBrowserEvent('alert',[
                 'type'=>'error',

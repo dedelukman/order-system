@@ -23,6 +23,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
    Route::get('/product/category', \App\Http\Livewire\ShowCategory::class)->name('category');
    Route::get('/product/detail', \App\Http\Livewire\ShowProduct::class)->name('product');
    Route::get('/order/list', \App\Http\Livewire\ShowOrder::class)->name('list.order');
-   Route::get('/order/create', \App\Http\Livewire\CreateOrder::class)->name('create.order');
+   Route::get('/order/create/{order}', \App\Http\Livewire\CreateOrder::class)->name('create.order');
 
 });

@@ -69,27 +69,13 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Order Master Collapse Menu -->
+       
+
+            <!-- Nav Item - Charts -->
             <li class="nav-item {{ (request()->is('order*')) ? 'active' : ''}}">
-                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOrderMaster" aria-expanded="true"
-                    aria-controls="collapseOrderMaster">
+                <a class="nav-link"  href="{{ route('list.order') }}">
                     <i class="fas fa-fw fa-shopping-cart"></i>
-                    <span>Order</span>
-                </a>
-                <div id="collapseOrderMaster" class="collapse  {{ (request()->is('order*')) ? 'show' : ''}}" 
-                    aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Order:</h6>
-                        <a class="collapse-item" 
-                        {{ (request()->is('order/create')) ? 'active' : ''}}" 
-                        href="{{ route('create.order') }}">Tambah Order</a>
-                        <a class="collapse-item
-                        {{ (request()->is('order/list')) ? 'active' : ''}}" 
-                        href="{{ route('list.order') }}">Daftar Order</a>
-                      
-                    </div>
-                </div>
+                    <span>Order</span></a>
             </li>
 
             <!-- Divider -->

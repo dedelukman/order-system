@@ -66,9 +66,7 @@
                                                         </button>
                                                         <div class="dropdown-menu animated--fade-in"
                                                             aria-labelledby="dropdownMenuButton">
-                                                            <a class="dropdown-item" 
-                                                            wire:click="edit({{ $entity->id }})"
-                                                            data-toggle="modal" data-target="#formModal"
+                                                            <a class="dropdown-item" href="{{ route('create.order',$entity) }}"
                                                             >Edit</a>
                                                             <a class="dropdown-item" data-toggle="modal" data-target="#deleteModal"
                                                             wire:click="deleteId({{ $entity->id }})"
@@ -109,76 +107,33 @@
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="formModalLabel">
-                            {{ $titleEditModal }}
-                             Data</h5>
+                          Tambah Data</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="code">Kode</label>
-                            <input type="text" class="form-control" id="code" aria-describedby="code"
-                            wire:model.defer="editing.code" :error="$errors->first('editing.code')" required
-                            >
-                            @error('editing.code') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Nama</label>
-                            <input type="text" class="form-control" id="name" aria-describedby="name"
-                            wire:model.defer="editing.name" required
-                            >
-                           @error('editing.name') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
-                        </div>
+                    <div class="modal-body">                                              
                          <div class="form-group">
                             <label for="name">Kategori</label>
                            
-                              <select class="form-control" name="city_id" wire:model.defer="editing.category_id">
-                                <option value="" selected>Pilih Kategori</option>
+                              <select class="form-control" name="city_id" wire:model.defer="editing.branch_id">
+                                <option value="" selected>Pilih Customer</option>
                         
                                 @foreach ($dropdownBranch as $item)
                                     <option value="{{ $item->id }}" >{{ $item->name }}</option>
                                 @endforeach
                                                                 
                             </select>
-                            @error('editing.category_id') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror                         
+                            @error('editing.branch_id') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror                         
                         </div>  
-                         <div class="form-group">
-                            <label for="exampleInputEmail1">Harga Cabang <small>belum ppn</small></label>
-                            <div class="input-group">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Rp</span>                            
-                                </div>
-                                <input type="number" class="form-control" aria-label="discount" min="0"  required
-                                wire:model.defer="editing.hj">
-                                
-                                @error('editing.hj') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
-                            </div>      
-                           
-                        </div>   
+                        
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Harga Distributor <small>sudah ppn</small></label>
-                            <div class="input-group">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Rp</span>                            
-                                </div>
-                                <input type="number" class="form-control" aria-label="discount" min="0"  required
-                                wire:model.defer="editing.het2">
-                                
-                                @error('editing.het2') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
-                            </div>      
-                           
-                        </div>  
-                        <div class="form-group">
-                            <label for="alamat">Deskripsi</label>
-                            <textarea class="form-control" id="alamat" rows="3"
+                            <label for="alamat">Keterangan</label>
+                            <textarea class="form-control" id="descripsi" rows="3"
                             wire:model.defer="editing.description" required
                             ></textarea>
                              @error('editing.description') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
-                        </div>                        
-                        
-                        
-                                                                  
+                        </div>                                                                                     
                        
                     </div>
                     <div class="modal-footer">

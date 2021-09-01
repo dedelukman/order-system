@@ -3,11 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Branch;
-use App\Models\Order;
+use App\Models\Order as EntityMaster;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\OrderDetail as Entities;
-use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
 
@@ -15,43 +14,50 @@ class CreateOrder extends Component
 {
     use WithPagination;
 
-    public $code;
-    public $branch;
-    public $description;
+    public EntityMaster $editingMaster;
 
-
+    public $order;
     public $search;
     public $sortField='code';
     public $sortDirection ='desc';    
     public $titleEditModal = 'Edit';
     public Entities $editing;
     public Entities $deleting;
-    public $dropdownMaster;    
+    public $branch;    
+    public $description;    
     public $dropdown;    
+      
+     
     
 
-    public function mount(){
+    public function mount(EntityMaster $order){
+        $this->editingMaster = $order;
         $this->dropdown = Product::where('active','1')->get();        
-        $this->dropdownMaster = Branch::where('active','1')->get();        
+        $this->branch = Branch::find($order->branch_id);
+        $this->description = $order->description;          
+    }
+  
+    public function updated(){
+        $this->editingMaster->description = $this->description;       
+        $this->editingMaster->save(); 
+          
+     
     }
 
-    public function saveForm(){
-        $data = $this->validate([
-            'code' => 'required',
-            'branch' => 'required',
-            
-        ]);
-        
+    public function productUpdate(){       
+        $this->editing->price= $this->branch->price === "HET2" ?
+        (Product::find($this->editing->product_id))->het2 :
+        (Product::find($this->editing->product_id))->hj;
+       $this->totalUpdate();
+    }
 
-        Order::Create([
-            
-            'code' => (Branch::find($this->branch)->category =="DISTRIBUTOR" ? "OD" : 
-            (Branch::find($this->branch)->category =="AGEN" ? "OA" : "OC") ) 
-            ."/".Branch::find($this->branch)->code."/".date("ymdhi") ,
-            'branch_id' => $data['branch'],
-            'description' => $this->description,
-            'user_id' => Auth::id(),
-        ]);
+    public function priceUpdate(){             
+       $this->totalUpdate();
+    }
+
+    public function totalUpdate(){               
+        $this->editing->total= ($this->editing->price * $this->editing->quantity) 
+        * ((100- $this->editing->diskon)/100);
     }
 
     public function rules() { 
@@ -59,13 +65,13 @@ class CreateOrder extends Component
             'editing.product_id' => 'required',            
             'editing.quantity' => 'required',            
             'editing.price' => 'required',                                 
-            'editing.discount' => 'required',                                 
-            'editing.total' => 'required',                                 
+            'editing.diskon' => 'required|max:100',                                 
+            'editing.total' => 'required',                                                                                                                                                        
         ]; 
     }
 
     public function makeBlankTransaction(){
-        return Entities::make();
+        return Entities::make();   
     }
 
     public function create(){
@@ -101,22 +107,11 @@ class CreateOrder extends Component
         $this->sortField = $field;
     }
 
-     public function changeRole(Entities $entity, $akses){
-        $entity->role = $akses;
-        $entity->save();
-      
-    }
-
-    public function changeActive(Entities $entity, $akses){
-        $entity->active = $akses;
-        $entity->save();
-        
-    }
-
+    
     public function save()
     {
         $this->validate();
-        $this->editing->slug = Str::slug($this->editing->name,'-');
+        $this->editing->order_id = $this->order->id;       
 
         try {
             $this->editing->save();    
@@ -138,12 +133,14 @@ class CreateOrder extends Component
         return view('livewire.create-order', [
          'entities' => Entities::leftJoin('products', 'order_details.product_id','=','products.id')            
         ->select('order_details.*', 'products.name as nameProduct')
-        ->where('products.name','like',"%{$this->search}%")
-        ->orWhere('order_details.quantity','like',"%{$this->search}%")
-        ->orWhere('order_details.price','like',"%{$this->search}%")
-        ->orWhere('order_details.diskon','like',"%{$this->search}%")        
-        ->orWhere('order_details.total','like',"%{$this->search}%")        
-        ->orderBy($this->sortField, $this->sortDirection)
+        ->where('order_id',$this->order->id,)
+        ->where(function($query){
+            $query->orwhere('products.name','like',"%{$this->search}%")
+                ->orWhere('order_details.quantity','like',"%{$this->search}%")
+                ->orWhere('order_details.price','like',"%{$this->search}%")
+                ->orWhere('order_details.diskon','like',"%{$this->search}%")        
+                ->orWhere('order_details.total','like',"%{$this->search}%");                      
+        })->orderBy($this->sortField, $this->sortDirection)
         ->paginate(10)
         ]);
     }
