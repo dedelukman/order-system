@@ -77,6 +77,10 @@ class ShowOrder extends Component
         (Branch::find($this->editing->branch_id)->category =="AGEN" ? "OA" : "OC") ) 
         ."/".Branch::find($this->editing->branch_id)->code."/".date("ymdhi") ;
         $this->editing->user_id = Auth::id();
+        $this->editing->diskon =(Branch::find($this->editing->branch_id)->discount);
+        $this->editing->bruto = 0;
+        $this->editing->hdkp = 0;
+        $this->editing->netto = 0;
 
     
 

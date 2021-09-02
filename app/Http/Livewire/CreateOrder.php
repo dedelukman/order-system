@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\OrderDetail as Entities;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class CreateOrder extends Component
 {
@@ -25,9 +26,13 @@ class CreateOrder extends Component
     public Entities $deleting;
     public $branch;    
     public $description;    
-    public $dropdown;    
-      
-     
+    public $subtotal;    
+    public $total;    
+    public $ppn;    
+    public $diskon;    
+    public $ppnValue;    
+    public $diskonValue;    
+    public $dropdown;
     
 
     public function mount(EntityMaster $order){
@@ -35,14 +40,50 @@ class CreateOrder extends Component
         $this->dropdown = Product::where('active','1')->get();        
         $this->branch = Branch::find($order->branch_id);
         $this->description = $order->description;          
+        $this->subtotal = $order->netto;          
+        $this->total = $order->bruto;          
+        $this->ppnValue = $order->tax;          
+        $this->ppn = $order->hdkp === "0.00" ?  "10.00" : ($order->tax/$order->hdkp)*100;
+        $this->diskon=$order->diskon;          
+        $this->diskonValue=($order->diskon/100)*$order->bruto;     
+    
     }
   
-    public function updated(){
+  
+    public function keteranganUpdate(){
         $this->editingMaster->description = $this->description;       
-        $this->editingMaster->save(); 
-          
-     
+        $this->editingMaster->save();          
     }
+
+    public function diskonUpdate(){
+        $this->diskonValue = ($this->diskon/100) * $this->editingMaster->netto;
+        $this->totalMasterUpdate();
+    }
+
+    public function diskonValueUpdate(){
+        $this->diskon = ($this->diskonValue/$this->editingMaster->netto)*100;
+        $this->totalMasterUpdate();   
+    }
+
+    public function ppnUpdate(){
+        $this->ppnValue = $this->ppn === "0" || $this->ppn ==="0.00" ? "0" : $this->editingMaster->hdkp * ($this->ppn/100);
+        $this->saveMasterUpdate();
+    }
+
+    public function totalMasterUpdate(){
+        $this->editingMaster->diskon = $this->diskon;
+        $this->editingMaster->hdkp = $this->editingMaster->netto - $this->diskonValue;
+        $this->ppnValue = $this->ppn === "0" || $this->ppn ==="0.00" ? "0" : $this->editingMaster->hdkp * ($this->ppn/100);
+        $this->saveMasterUpdate();
+    }
+    public function saveMasterUpdate(){       
+        $this->editingMaster->tax = $this->ppnValue;
+        $this->total = $this->editingMaster->hdkp + $this->ppnValue;
+        $this->editingMaster->bruto = $this->total;
+        $this->editingMaster->save();
+    }
+
+
 
     public function productUpdate(){       
         $this->editing->price= $this->branch->price === "HET2" ?
@@ -91,6 +132,7 @@ class CreateOrder extends Component
 
     public function delete(){
         $this->deleting->delete();
+        $this->sumTotal();
         $this->dispatchBrowserEvent('alert',[
                 'type'=>'success',
                 'message'=>"Data Berhasil di Delete!!"
@@ -107,6 +149,16 @@ class CreateOrder extends Component
         $this->sortField = $field;
     }
 
+    public function sumTotal(){  
+        $this->subtotal =(DB::table('order_details') 
+                                ->select('order_id', DB::raw('SUM(total) as jumlah'))
+                                ->groupBy('order_id')
+                                ->where('order_id', $this->order->id)
+                                ->first())->jumlah;
+        $this->editingMaster->netto = $this->subtotal;
+        $this->diskonUpdate();
+    }
+
     
     public function save()
     {
@@ -114,7 +166,8 @@ class CreateOrder extends Component
         $this->editing->order_id = $this->order->id;       
 
         try {
-            $this->editing->save();    
+            $this->editing->save();
+            $this->sumTotal();
             $this->dispatchBrowserEvent('alert',[
                 'type'=>'success',
                 'message'=>"Data Berhasil Disimpan!!"

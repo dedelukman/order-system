@@ -1,35 +1,33 @@
 <div>
-    
     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Tambah Order</h1>
                     <p class="mb-4">Tambah order Cabang, Distributor dan Agen.</p>
-
-                    <div class="card shadow mb-4">
+                   
+                      <div class="card shadow mb-2">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Form Master</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Data Master</h6>
                         </div>
-                        <div class="card-body">                                                 
-                            <form>
+                        <div class="card-body"> 
+                            <form class="">
                                 <div class="form-group row ">
                                     <div class="col-lg-6">
                                         <label for="code">No Order</label>
-                                  <input type="text" class="form-control" id="code" readonly value="{{$editingMaster->code }}">
+                                        <input type="text" class="form-control" id="code" readonly value="{{$editingMaster->code }}">
                                 
                                     </div>
                                     <div class="col-lg-6">
-                                          <label for="branch">Pelanggan</label>
-                                    <input type="text" class="form-control" id="branch" readonly value="{{$branch->name }}">
-                               
+                                        <label for="branch">Pelanggan</label>
+                                        <input type="text" class="form-control" id="branch" readonly value="{{$branch->name }}">
+                            
                                     </div>
-                                  
-                                   </div>                               
-                                <div class="form-group">
-                                  <label for="description">Keterangan</label>
-                                  <textarea class="form-control" id="description" rows="3" wire:model="description"></textarea>
-                                </div>                                
-                              </form>
+                                
+                                </div>                               
+                                        
+                            </form>
+
                         </div>
-                    </div>
+                      </div>
+               
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -123,9 +121,88 @@
                             </div>
 
                             <div class="mt-4">{{ $entities->links() }}</div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="description">Keterangan</label>
+                                        <textarea class="form-control" id="description" rows="6" wire:model="description" wire:change="keteranganUpdate()"></textarea>
+                                      </div>               
+                                </div>
+                                <div class="col-md-6">
+                                <form >
+                                <div class="form-group row ">
+                                  <label for="inputEmail3" class="col-sm-3 col-form-label">Subtotal</label>
+                                  <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Rp</span>                            
+                                        </div>
+                                        <input type="number" class="form-control" id="inputEmail3" placeholder="SubTotal" readonly wire:model="subtotal">
+                                    </div>                                    
+                                  </div>
+                                </div>     
+                                
+                                <div class="form-group row ">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Diskon</label>
+                                    <div class="col-sm-4">
+                                        <div class="input-group"> 
+                                            <input type="number" class="form-control" id="inputEmail3" placeholder="Diskon" wire:model="diskon" wire:click="diskonUpdate()">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">%</span>                            
+                                            </div>                                           
+                                        </div>                                    
+                                      </div>
+                                    <div class="col-sm-5">
+                                      <div class="input-group">
+                                          <div class="input-group-append">
+                                              <span class="input-group-text">Rp</span>                      
+                                          </div>
+                                          <input type="number" class="form-control" id="inputEmail3" placeholder="Diskon" wire:model="diskonValue" wire:click="diskonValueUpdate()">
+                                      </div>                                    
+                                    </div>
+                                </div>
+                                <div class="form-group row ">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">PPn</label>
+                                    <div class="col-sm-4">
+                                        <div class="input-group"> 
+                                            <input type="number" class="form-control" id="inputEmail3" placeholder="PPn" wire:model="ppn" wire:change="ppnUpdate()">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">%</span>                            
+                                            </div>                                           
+                                        </div>                                    
+                                      </div>
+                                    <div class="col-sm-5">
+                                      <div class="input-group">
+                                          <div class="input-group-append">
+                                              <span class="input-group-text">Rp</span>                            
+                                          </div>
+                                          <input type="number" class="form-control" id="inputEmail3" placeholder="PPn" wire:model="ppnValue" readonly>
+                                      </div>                                    
+                                    </div>
+                                </div>
+                                <div class="form-group row ">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Total</label>
+                                    <div class="col-sm-9">
+                                      <div class="input-group">
+                                          <div class="input-group-append">
+                                              <span class="input-group-text">Rp</span>                            
+                                          </div>
+                                          <input type="email" class="form-control" id="inputEmail3" placeholder="Total" readonly wire:model="total">
+                                      </div>                                    
+                                    </div>
+                                </div>                        
+                        
+
+                            </form>
+                                </div>
+                            </div>
+                           
+
+                                             
                         </div>
                     </div>
 
+        
         <!-- Modal Form-->
         <form action="">            
             <div wire:ignore.self class="modal fade" id="formModal"
@@ -143,7 +220,7 @@
                     <div class="modal-body">                       
                          <div class="form-group">
                             <label for="name">Produk</label>                           
-                              <select class="form-control" name="city_id" wire:model.defer="editing.product_id"  wire:change="productUpdate()" >
+                              <select class="form-control" name="city_id" wire:model.defer="editing.product_id"  wire:click="productUpdate()" >
                                 <option value="" selected>Pilih Produk</option>
                         
                                 @foreach ($dropdown as $item)

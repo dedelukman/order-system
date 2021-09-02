@@ -19,8 +19,8 @@ class CreateOrderDetailsTable extends Migration
             $table->foreignId('product_id')->references('id')->on('products');           
             $table->integer('quantity');
             $table->decimal('price');
-            $table->decimal('diskon');
-            $table->decimal('total');
+            $table->decimal('diskon',5,2);
+            $table->decimal('total',13,2);
             $table->timestamps();
             $table->unique(["order_id", "product_id"], 'order_product_unique');
         });
