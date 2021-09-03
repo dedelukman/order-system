@@ -19,15 +19,15 @@
             </li>
 
             <!-- Divider -->
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider  {{ Auth::user()->role === 'USER' ? 'hidden' : ''}}">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading  {{ Auth::user()->role === 'USER' ? 'hidden' : ''}}">
                 Master
             </div>
 
             <!-- Nav Item - Customer Collapse Menu -->
-            <li class="nav-item  {{ (request()->is('customer*')) ? 'active' : ''}}">
+            <li class="nav-item  {{ (request()->is('customer*')) ? 'active' : ''}}  {{ Auth::user()->role === 'USER' ? 'hidden' : ''}}">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCustomer"
                     aria-expanded="true" aria-controls="collapseCustomer">
                     <i class="fas fa-fw fa-building"></i>
@@ -48,7 +48,7 @@
             </li>
 
             <!-- Nav Item - Product Collapse Menu -->
-            <li class="nav-item {{ (request()->is('product*')) ? 'active' : ''}}">
+            <li class="nav-item {{ (request()->is('product*')) ? 'active' : ''}}  {{ Auth::user()->role === 'USER' ? 'hidden' : ''}}">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduct"
                     aria-expanded="true" aria-controls="collapseProduct">
                     <i class="fas fa-fw fa-archive"></i>
@@ -70,65 +70,21 @@
             </li>
 
        
-
-            <!-- Nav Item - Charts -->
-            <li class="nav-item {{ (request()->is('order*')) ? 'active' : ''}}">
-                <a class="nav-link"  href="{{ route('list.order') }}">
-                    <i class="fas fa-fw fa-shopping-cart"></i>
-                    <span>Order</span></a>
-            </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Cabang
+                Transaksi
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseOrderCabang" aria-expanded="true"
-                    aria-controls="collapseOrderCabang">
-                    <i class="fas fa-fw fa-cart-plus"></i>
-                    <span>Order</span>
-                </a>
-                <div id="collapseOrderCabang" class="collapse " aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Order:</h6>
-                        <a class="collapse-item" href="{{ asset('theme/login.html') }}">Tambah Baru</a>
-                        <a class="collapse-item" href="{{ asset('theme/register.html') }}">Daftar Order</a>
-                      
-                    </div>
-                </div>
-            </li>
+                       <!-- Nav Item - Charts -->
+                       <li class="nav-item {{ (request()->is('order*')) ? 'active' : ''}}">
+                        <a class="nav-link"  href="{{ route('list.order') }}">
+                            <i class="fas fa-fw fa-shopping-cart"></i>
+                            <span>Order</span></a>
+                    </li>
 
-             <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Distributor & Agen
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ asset('theme/#') }}" data-toggle="collapse" data-target="#collapseOrderDisAgen" aria-expanded="true"
-                    aria-controls="collapseOrderDisAgen">
-                    <i class="fas fa-fw fa-cart-plus"></i>
-                    <span>Order</span>
-                </a>
-                <div id="collapseOrderDisAgen" class="collapse " aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Order:</h6>
-                        <a class="collapse-item" href="{{ asset('theme/login.html') }}">Tambah Baru</a>
-                        <a class="collapse-item" href="{{ asset('theme/register.html') }}">Daftar Order</a>
-                      
-                    </div>
-                </div>
-            </li>
 
 
             

@@ -27,7 +27,7 @@
                                     <button class="btn btn-primary {{ Auth::user()->role === 'ADMIN' ? 'hidden' : ''}} "  wire:click="newOrder()">
                                         <i class="fas fa-plus fa-sm"> New</i>
                                     </button>  
-                                    <button class="btn btn-primary " data-toggle="modal" data-target="#formModal" wire:click="create">
+                                    <button class="btn btn-primary {{ Auth::user()->role === 'USER' ? 'hidden' : ''}}" data-toggle="modal" data-target="#formModal" wire:click="create">
                                         <i class="fas fa-plus fa-sm"> New</i>
                                     </button>  
                                 </div>
@@ -39,7 +39,7 @@
                                     <thead>
                                         <tr>
                                             <th wire:click="sortBy('code')" ><i class="fa fa-fw fa-sort"></i>No Order</th>
-                                            <th wire:click="sortBy('nameBranch')" ><i class="fa fa-fw fa-sort"></i>Customer</th>
+                                            <th wire:click="sortBy('nameBranch')" class="{{ Auth::user()->role === 'USER' ? 'hidden' : ''}}" ><i class="fa fa-fw fa-sort  "></i>Customer</th>
                                             <th wire:click="sortBy('nameUser')" ><i class="fa fa-fw fa-sort"></i>User</th>  
                                             {{-- <th wire:click="sortBy('subtotal')" ><i class="fa fa-fw fa-sort"></i>Subtotal</th> --}}
                                             <th wire:click="sortBy('total')" ><i class="fa fa-fw fa-sort"></i>Total</th>
@@ -53,7 +53,7 @@
                                         @forelse($entities as $entity )
                                             <tr wire:loading.class.delay="opacity-50">
                                                 <td>{{ $entity->code }}</td>
-                                                <td>{{ $entity->nameBranch }}</td>
+                                                <td class=" {{ Auth::user()->role === 'USER' ? 'hidden' : ''}}">{{ $entity->nameBranch }}</td>
                                                 <td>{{ $entity->nameUser}}</td>
                                                 {{-- <td>Rp {{ number_format($entity->subtotal , 0, ',', '.') }}</td> --}}
                                                 <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                

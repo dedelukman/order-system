@@ -77,7 +77,7 @@ class CreateOrder extends Component
         $this->editingMaster->diskon = $this->diskon;
         $this->editingMaster->diskon_value = str_replace('.','',$this->diskonValue);
         $this->editingMaster->hdkp = $this->branch->price === "HJ" ?
-        $this->editingMaster->subtotal - str_replace('.','',$this->diskonValue) : ($this->editingMaster->subtotal - str_replace('.','',$this->diskonValue))/1.1;
+        $this->editingMaster->subtotal - $this->editingMaster->diskon_value : ($this->editingMaster->subtotal - $this->editingMaster->diskon_value)/1.1;
         $this->ppnValue =  number_format($this->ppn === "0" || $this->ppn ==="0.00" ? "0" : $this->editingMaster->hdkp * ($this->ppn/100), 0, ',', '.');
         $this->saveMasterUpdate();
     }

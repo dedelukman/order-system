@@ -64,7 +64,7 @@
                                             <th wire:click="sortBy('nameProduct')" ><i class="fa fa-fw fa-sort"></i>Produk</th>
                                             <th wire:click="sortBy('quantity')" ><i class="fa fa-fw fa-sort"></i>Qty</th>                                              
                                             <th wire:click="sortBy('price')" ><i class="fa fa-fw fa-sort"></i>Harga</th>
-                                            <th wire:click="sortBy('diskon')" ><i class="fa fa-fw fa-sort"></i>Diskon</th>                                            
+                                            <th wire:click="sortBy('diskon')" class="{{ Auth::user()->role === 'USER' ? 'hidden' : ''}}" ><i class="fa fa-fw fa-sort"></i>Diskon</th>                                            
                                             <th wire:click="sortBy('total')" ><i class="fa fa-fw fa-sort"></i>Total</th>                                            
                                             <th wire:click="sortBy('created_at')" ><i class="fa fa-fw fa-sort"></i>Dibuat</th>                                            
                                             <th></th>
@@ -77,7 +77,7 @@
                                                 <td>{{ $entity->nameProduct }}</td>
                                                 <td>{{ $entity->quantity}}</td>
                                                 <td>Rp {{ number_format($entity->price , 0, ',', '.') }}</td>
-                                                <td>{{ number_format($entity->diskon , 0, ',', '.')}}%</td>
+                                                <td class="{{ Auth::user()->role === 'USER' ? 'hidden' : ''}}" >{{ number_format($entity->diskon , 0, ',', '.')}}%</td>
                                                 <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                                                               
                                                 <td>{{ $entity->created_at->diffForHumans()}}</td>                                                                                             
                                                 <td>                                                                                                                                                       
@@ -146,7 +146,8 @@
                                     <label for="inputEmail3" class="col-sm-3 col-form-label">Diskon</label>
                                     <div class="col-sm-4">
                                         <div class="input-group"> 
-                                            <input type="number" class="form-control text-right" id="inputEmail3" placeholder="Diskon" wire:model="diskon" wire:click="diskonUpdate()">
+                                            <input type="number" class="form-control text-right" id="inputEmail3" placeholder="Diskon" wire:model="diskon" wire:click="diskonUpdate()"
+                                            {{ Auth::user()->role === 'USER' ? 'readonly' : ''}}>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">%</span>                            
                                             </div>                                           
@@ -157,7 +158,8 @@
                                           <div class="input-group-append">
                                               <span class="input-group-text">Rp</span>                      
                                           </div>
-                                          <input type="text" class="form-control text-right" id="inputEmail3" placeholder="Diskon" wire:model="diskonValue" wire:click="diskonValueUpdate()">
+                                          <input type="text" class="form-control text-right" id="inputEmail3" placeholder="Diskon" wire:model="diskonValue" wire:click="diskonValueUpdate()"
+                                          {{ Auth::user()->role === 'USER' ? 'readonly' : ''}}>
                                       </div>                                    
                                     </div>
                                 </div>
@@ -165,7 +167,8 @@
                                     <label for="inputEmail3" class="col-sm-3 col-form-label">PPn</label>
                                     <div class="col-sm-4">
                                         <div class="input-group"> 
-                                            <input type="number" class="form-control text-right" id="inputEmail3" placeholder="PPn" wire:model="ppn" wire:change="ppnUpdate()">
+                                            <input type="number" class="form-control text-right" id="inputEmail3" placeholder="PPn" wire:model="ppn" wire:change="ppnUpdate()" 
+                                            {{ Auth::user()->role === 'USER' ? 'readonly' : ''}}>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">%</span>                            
                                             </div>                                           
@@ -255,7 +258,7 @@
                            
                         </div>     
                         
-                        <div class="form-group">
+                        <div class="form-group {{ Auth::user()->role === 'USER' ? 'hidden' : ''}} ">
                             <label for="exampleInputEmail1">Diskon</label>
                             <div class="input-group">
                                 

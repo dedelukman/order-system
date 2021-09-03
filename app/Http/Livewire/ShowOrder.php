@@ -128,17 +128,34 @@ class ShowOrder extends Component
     }
 
     public function render()
-    {
-        return view('livewire.show-order', [
-         'entities' => Entities::leftJoin('branches', 'orders.branch_id','=','branches.id')    
-        ->leftJoin('users', 'orders.user_id','=','users.id')  
-        ->select('orders.*', 'branches.name as nameBranch', 'users.name as nameUser')
-        ->where('orders.code','like',"%{$this->search}%")
-        ->orWhere('orders.status','like',"%{$this->search}%")
-        ->orWhere('branches.name','like',"%{$this->search}%")
-        ->orWhere('users.name','like',"%{$this->search}%")
-        ->orderBy($this->sortField, $this->sortDirection)
-        ->paginate(10)
-        ]);
+    {        
+        if(Auth::user()->role === "ADMIN"){
+            return view('livewire.show-order', [
+                'entities' => Entities::leftJoin('branches', 'orders.branch_id','=','branches.id')    
+               ->leftJoin('users', 'orders.user_id','=','users.id')  
+               ->select('orders.*', 'branches.name as nameBranch', 'users.name as nameUser')
+               ->where('orders.code','like',"%{$this->search}%")
+               ->orWhere('orders.status','like',"%{$this->search}%")
+               ->orWhere('branches.name','like',"%{$this->search}%")
+               ->orWhere('users.name','like',"%{$this->search}%")
+               ->orderBy($this->sortField, $this->sortDirection)
+               ->paginate(10)
+               ]);
+        }else{
+            return view('livewire.show-order', [
+                'entities' => Entities::leftJoin('branches', 'orders.branch_id','=','branches.id')    
+               ->leftJoin('users', 'orders.user_id','=','users.id')  
+               ->select('orders.*', 'branches.name as nameBranch', 'users.name as nameUser')
+               ->where('orders.branch_id',$this->branch)
+               ->where(function($query){
+                   $query->orwhere('orders.code','like',"%{$this->search}%")
+                        ->orWhere('orders.status','like',"%{$this->search}%")
+                        ->orWhere('branches.name','like',"%{$this->search}%")
+                        ->orWhere('users.name','like',"%{$this->search}%");                  
+               })->orderBy($this->sortField, $this->sortDirection)
+               ->paginate(10)
+               ]);
+        }
+        
     }
 }
