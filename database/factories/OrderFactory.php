@@ -28,11 +28,12 @@ class OrderFactory extends Factory
             'code' => Str::random(10),
             'status' => 'PENDING',
             'description' => Str::random(60),
-            'bruto' => rand(100000,1000000),
+            'subtotal' => rand(100000,1000000),
             'diskon' => rand(0,100),
+            'diskon_value' => rand(10000,100000),
             'hdkp' => rand(10000,100000),
             'tax' => rand(10000,100000),
-            'netto' => rand(10000,100000),
+            'total' => rand(10000,100000),
         ];
     }
 }

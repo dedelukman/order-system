@@ -1,5 +1,4 @@
-<div>
-    
+<div>    
     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Daftar Order</h1>
                     <p class="mb-4">Daftar data order Cabang, Distributor dan Agen.</p>
@@ -25,6 +24,9 @@
                                     </div>
                                 </form> 
                                 <div >
+                                    <button class="btn btn-primary {{ Auth::user()->role === 'ADMIN' ? 'hidden' : ''}} "  wire:click="newOrder()">
+                                        <i class="fas fa-plus fa-sm"> New</i>
+                                    </button>  
                                     <button class="btn btn-primary " data-toggle="modal" data-target="#formModal" wire:click="create">
                                         <i class="fas fa-plus fa-sm"> New</i>
                                     </button>  
@@ -39,8 +41,8 @@
                                             <th wire:click="sortBy('code')" ><i class="fa fa-fw fa-sort"></i>No Order</th>
                                             <th wire:click="sortBy('nameBranch')" ><i class="fa fa-fw fa-sort"></i>Customer</th>
                                             <th wire:click="sortBy('nameUser')" ><i class="fa fa-fw fa-sort"></i>User</th>  
-                                            {{-- <th wire:click="sortBy('bruto')" ><i class="fa fa-fw fa-sort"></i>Bruto</th> --}}
-                                            <th wire:click="sortBy('netto')" ><i class="fa fa-fw fa-sort"></i>Netto</th>
+                                            {{-- <th wire:click="sortBy('subtotal')" ><i class="fa fa-fw fa-sort"></i>Subtotal</th> --}}
+                                            <th wire:click="sortBy('total')" ><i class="fa fa-fw fa-sort"></i>Total</th>
                                             <th wire:click="sortBy('status')" ><i class="fa fa-fw fa-sort"></i>Status</th>                                            
                                             <th wire:click="sortBy('created_at')" ><i class="fa fa-fw fa-sort"></i>Dibuat</th>                                            
                                             <th></th>
@@ -53,8 +55,8 @@
                                                 <td>{{ $entity->code }}</td>
                                                 <td>{{ $entity->nameBranch }}</td>
                                                 <td>{{ $entity->nameUser}}</td>
-                                                {{-- <td>Rp {{ number_format($entity->bruto , 0, ',', '.') }}</td> --}}
-                                                <td>Rp {{ number_format($entity->netto , 0, ',', '.') }}</td>                                                
+                                                {{-- <td>Rp {{ number_format($entity->subtotal , 0, ',', '.') }}</td> --}}
+                                                <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                
                                                 <td>{{ $entity->status}}</td>
                                                 <td>{{ $entity->created_at->diffForHumans()}}</td>                                                                                             
                                                 <td>                                                                                                                                                       

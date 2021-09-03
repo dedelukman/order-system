@@ -20,11 +20,12 @@ class CreateOrdersTable extends Migration
             $table->string('code')->unique();
             $table->string('status')->default("PENDING");
             $table->text('description')->nullable();
-            $table->decimal('bruto',15,2)->default("0");            
+            $table->decimal('subtotal',15,2)->default("0");            
             $table->decimal('diskon',5,2)->default("0");
+            $table->decimal('diskon_value',13,2)->default("0");
             $table->decimal('hdkp',13,2)->default("0");
             $table->decimal('tax',13,2)->default("0");
-            $table->decimal('netto',13,2)->default("0");
+            $table->decimal('total',13,2)->default("0");
             $table->softDeletes();
             $table->timestamps();
         });

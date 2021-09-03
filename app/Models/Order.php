@@ -16,11 +16,12 @@ class Order extends Model
         'user_id',
         'status',
         'description',        
-        'bruto',        
+        'subtotal',        
         'diskon',        
+        'diskon_value',        
         'hdkp',        
         'tax',        
-        'netto',        
+        'total',        
         'active',        
     ];
 

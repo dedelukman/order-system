@@ -32,6 +32,8 @@ class CreateOrder extends Component
     public $diskon;    
     public $ppnValue;    
     public $diskonValue;    
+    public $harga;    
+    public $jumlahDetail;    
     public $dropdown;
     
 
@@ -40,13 +42,13 @@ class CreateOrder extends Component
         $this->dropdown = Product::where('active','1')->get();        
         $this->branch = Branch::find($order->branch_id);
         $this->description = $order->description;          
-        $this->subtotal = $order->netto;          
-        $this->total = $order->bruto;          
-        $this->ppnValue = $order->tax;          
-        $this->ppn = $order->hdkp === "0.00" ?  "10.00" : ($order->tax/$order->hdkp)*100;
-        $this->diskon=$order->diskon;          
-        $this->diskonValue=($order->diskon/100)*$order->bruto;     
-    
+        $this->subtotal = number_format($order->subtotal, 0, ',', '.');          
+        $this->total = number_format($order->total, 0, ',', '.');          
+        $this->ppnValue = number_format($order->tax, 0, ',', '.');          
+        $this->ppn = number_format($order->hdkp === "0.00" ?  "10.00" : ($order->tax/$order->hdkp)*100,0);
+        $this->diskon= $order->diskon;          
+        $this->diskonValue=number_format($order->diskon_value, 0, ',', '.'); 
+            
     }
   
   
@@ -56,39 +58,42 @@ class CreateOrder extends Component
     }
 
     public function diskonUpdate(){
-        $this->diskonValue = ($this->diskon/100) * $this->editingMaster->netto;
+        $this->diskonValue = number_format(($this->diskon/100) * $this->editingMaster->subtotal, 0, ',', '.');
         $this->totalMasterUpdate();
     }
 
     public function diskonValueUpdate(){
-        $this->diskon = ($this->diskonValue/$this->editingMaster->netto)*100;
+        $this->diskonValue = strpos($this->diskonValue, '.') !== false ? $this->diskonValue : number_format($this->diskonValue, 0, ',', '.');
+        $this->diskon = (str_replace('.','',$this->diskonValue)/$this->editingMaster->subtotal)*100;
         $this->totalMasterUpdate();   
     }
 
     public function ppnUpdate(){
-        $this->ppnValue = $this->ppn === "0" || $this->ppn ==="0.00" ? "0" : $this->editingMaster->hdkp * ($this->ppn/100);
+        $this->ppnValue = number_format($this->ppn === "0" || $this->ppn ==="0.00" ? "0" : $this->editingMaster->hdkp * ($this->ppn/100) , 0, ',', '.');                                                                                          
         $this->saveMasterUpdate();
     }
 
     public function totalMasterUpdate(){
         $this->editingMaster->diskon = $this->diskon;
-        $this->editingMaster->hdkp = $this->editingMaster->netto - $this->diskonValue;
-        $this->ppnValue = $this->ppn === "0" || $this->ppn ==="0.00" ? "0" : $this->editingMaster->hdkp * ($this->ppn/100);
+        $this->editingMaster->diskon_value = str_replace('.','',$this->diskonValue);
+        $this->editingMaster->hdkp = $this->branch->price === "HJ" ?
+        $this->editingMaster->subtotal - str_replace('.','',$this->diskonValue) : ($this->editingMaster->subtotal - str_replace('.','',$this->diskonValue))/1.1;
+        $this->ppnValue =  number_format($this->ppn === "0" || $this->ppn ==="0.00" ? "0" : $this->editingMaster->hdkp * ($this->ppn/100), 0, ',', '.');
         $this->saveMasterUpdate();
     }
+
     public function saveMasterUpdate(){       
-        $this->editingMaster->tax = $this->ppnValue;
-        $this->total = $this->editingMaster->hdkp + $this->ppnValue;
-        $this->editingMaster->bruto = $this->total;
+        $this->editingMaster->tax = str_replace('.','',$this->ppnValue);
+        $this->total = number_format($this->editingMaster->hdkp + $this->editingMaster->tax, 0,',','.');       
+        $this->editingMaster->total = str_replace('.','',$this->total);
         $this->editingMaster->save();
     }
 
-
-
     public function productUpdate(){       
-        $this->editing->price= $this->branch->price === "HET2" ?
+        $this->harga = number_format($this->branch->price === "HET2" ?
         (Product::find($this->editing->product_id))->het2 :
-        (Product::find($this->editing->product_id))->hj;
+        (Product::find($this->editing->product_id))->hj,0,',','.');
+        $this->editing->price = str_replace('.','',$this->harga);
        $this->totalUpdate();
     }
 
@@ -97,8 +102,9 @@ class CreateOrder extends Component
     }
 
     public function totalUpdate(){               
-        $this->editing->total= ($this->editing->price * $this->editing->quantity) 
-        * ((100- $this->editing->diskon)/100);
+        $this->jumlahDetail= number_format(($this->editing->price * $this->editing->quantity) 
+        * ((100- $this->editing->diskon)/100),0,',','.');
+        $this->editing->total = str_replace('.','',$this->jumlahDetail);
     }
 
     public function rules() { 
@@ -118,11 +124,17 @@ class CreateOrder extends Component
     public function create(){
         $this->editing =  $this->makeBlankTransaction();
         $this->titleEditModal='Tambah';
+        $this->harga=0;    
+        $this->jumlahDetail=0; 
+        $this->editing->quantity = 0;   
+        $this->editing->diskon = 0;   
     }
 
     public function edit(Entities $entity){
         $this->editing = $entity;
-         $this->titleEditModal='Edit';
+        $this->harga = number_format($this->editing->price, 0,',','.');
+        $this->jumlahDetail = number_format($this->editing->total, 0,',','.');
+        $this->titleEditModal='Edit';
     }
 
     public function deleteId(Entities $entity)
@@ -150,12 +162,12 @@ class CreateOrder extends Component
     }
 
     public function sumTotal(){  
-        $this->subtotal =(DB::table('order_details') 
+        $this->subtotal = number_format((DB::table('order_details') 
                                 ->select('order_id', DB::raw('SUM(total) as jumlah'))
                                 ->groupBy('order_id')
                                 ->where('order_id', $this->order->id)
-                                ->first())->jumlah;
-        $this->editingMaster->netto = $this->subtotal;
+                                ->first())->jumlah, 0,',','.');
+        $this->editingMaster->subtotal = str_replace('.','',$this->subtotal);
         $this->diskonUpdate();
     }
 

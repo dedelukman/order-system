@@ -77,7 +77,7 @@
                                                 <td>{{ $entity->nameProduct }}</td>
                                                 <td>{{ $entity->quantity}}</td>
                                                 <td>Rp {{ number_format($entity->price , 0, ',', '.') }}</td>
-                                                <td>{{ $entity->diskon}}%</td>
+                                                <td>{{ number_format($entity->diskon , 0, ',', '.')}}%</td>
                                                 <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                                                               
                                                 <td>{{ $entity->created_at->diffForHumans()}}</td>                                                                                             
                                                 <td>                                                                                                                                                       
@@ -137,7 +137,7 @@
                                         <div class="input-group-append">
                                             <span class="input-group-text">Rp</span>                            
                                         </div>
-                                        <input type="number" class="form-control" id="inputEmail3" placeholder="SubTotal" readonly wire:model="subtotal">
+                                        <input type="text" class="form-control text-right" id="inputEmail3" placeholder="SubTotal" readonly wire:model="subtotal">
                                     </div>                                    
                                   </div>
                                 </div>     
@@ -146,7 +146,7 @@
                                     <label for="inputEmail3" class="col-sm-3 col-form-label">Diskon</label>
                                     <div class="col-sm-4">
                                         <div class="input-group"> 
-                                            <input type="number" class="form-control" id="inputEmail3" placeholder="Diskon" wire:model="diskon" wire:click="diskonUpdate()">
+                                            <input type="number" class="form-control text-right" id="inputEmail3" placeholder="Diskon" wire:model="diskon" wire:click="diskonUpdate()">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">%</span>                            
                                             </div>                                           
@@ -157,7 +157,7 @@
                                           <div class="input-group-append">
                                               <span class="input-group-text">Rp</span>                      
                                           </div>
-                                          <input type="number" class="form-control" id="inputEmail3" placeholder="Diskon" wire:model="diskonValue" wire:click="diskonValueUpdate()">
+                                          <input type="text" class="form-control text-right" id="inputEmail3" placeholder="Diskon" wire:model="diskonValue" wire:click="diskonValueUpdate()">
                                       </div>                                    
                                     </div>
                                 </div>
@@ -165,7 +165,7 @@
                                     <label for="inputEmail3" class="col-sm-3 col-form-label">PPn</label>
                                     <div class="col-sm-4">
                                         <div class="input-group"> 
-                                            <input type="number" class="form-control" id="inputEmail3" placeholder="PPn" wire:model="ppn" wire:change="ppnUpdate()">
+                                            <input type="number" class="form-control text-right" id="inputEmail3" placeholder="PPn" wire:model="ppn" wire:change="ppnUpdate()">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">%</span>                            
                                             </div>                                           
@@ -176,7 +176,7 @@
                                           <div class="input-group-append">
                                               <span class="input-group-text">Rp</span>                            
                                           </div>
-                                          <input type="number" class="form-control" id="inputEmail3" placeholder="PPn" wire:model="ppnValue" readonly>
+                                          <input type="text" class="form-control text-right" id="inputEmail3" placeholder="PPn" wire:model="ppnValue" readonly>
                                       </div>                                    
                                     </div>
                                 </div>
@@ -187,7 +187,7 @@
                                           <div class="input-group-append">
                                               <span class="input-group-text">Rp</span>                            
                                           </div>
-                                          <input type="email" class="form-control" id="inputEmail3" placeholder="Total" readonly wire:model="total">
+                                          <input type="text" class="form-control text-right" id="inputEmail3" placeholder="Total" readonly wire:model="total">
                                       </div>                                    
                                     </div>
                                 </div>                        
@@ -236,10 +236,9 @@
                                 <div class="input-group-append">
                                     <span class="input-group-text">Rp</span>                            
                                 </div>
-                                <input type="number" class="form-control" aria-label="price" min="0" wire:change="totalUpdate()"
-                                wire:model.defer="editing.price">
-                                
-                                @error('editing.price') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                                <input type="text" class="form-control" aria-label="price" min="0" wire:change="totalUpdate()"
+                                wire:model.defer="harga">
+                                                              
                             </div>      
                            
                         </div>   
@@ -275,10 +274,10 @@
                                 <div class="input-group-append">
                                     <span class="input-group-text">Rp</span>                            
                                 </div>
-                                <input type="number" class="form-control" aria-label="total" min="0" required
-                                wire:model.defer="editing.total">
+                                <input type="text" class="form-control" aria-label="total" min="0" required
+                                wire:model.defer="jumlahDetail">
                                 
-                                @error('editing.total') <p class="error text-sm text-red-500 w-full">{{ $message }}</p> @enderror
+                               
                             </div>                                 
                         </div>                      
                         

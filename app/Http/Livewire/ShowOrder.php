@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Routing\Route;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -23,11 +24,13 @@ class ShowOrder extends Component
     public Entities $editing;
     public Entities $deleting;
     public $dropdownBranch;
+    public $branch;
 
     
 
     public function mount(){
-        $this->dropdownBranch = Branch::where('active','1')->get();        
+        $this->dropdownBranch = Branch::where('active','1')->get();  
+        $this->branch = Auth::user()->branch_id;
     }
 
     public function rules() { 
@@ -78,11 +81,9 @@ class ShowOrder extends Component
         ."/".Branch::find($this->editing->branch_id)->code."/".date("ymdhi") ;
         $this->editing->user_id = Auth::id();
         $this->editing->diskon =(Branch::find($this->editing->branch_id)->discount);
-        $this->editing->bruto = 0;
+        $this->editing->subtotal = 0;
         $this->editing->hdkp = 0;
-        $this->editing->netto = 0;
-
-    
+        $this->editing->total = 0;
 
         try {
             $this->editing->save();    
@@ -92,6 +93,36 @@ class ShowOrder extends Component
             $this->dispatchBrowserEvent('alert',[
                 'type'=>'error',
                 'message'=>"Data Tidak Berhasil Disimpan!!"
+            ]);
+        }
+    }
+
+    public function newOrder()
+    {             
+        $id = DB::table('orders')->insertGetId(
+            [
+            'code' => (Branch::find($this->branch)->category =="DISTRIBUTOR" ? "OD" : 
+            (Branch::find($this->branch)->category =="AGEN" ? "OA" : "OC") ) 
+            ."/".Branch::find($this->branch)->code."/".date("ymdhi") ,
+            'user_id' =>  Auth::id(),
+            'branch_id' =>  $this->branch,
+            'diskon' =>  (Branch::find($this->branch)->discount),
+            'subtotal' =>  0,
+            'hdkp' =>  0,
+            'total' =>  0,
+            'tax' =>  0,
+            'created_at' =>  now(),
+            'diskon_value' =>  0
+            ]
+        );
+
+        try {
+                           
+            return Redirect()->route('create.order',$id);            
+        } catch (\Exception $e) {
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'error',
+                'message'=>"Order Baru gagal dibuat!!"
             ]);
         }
     }
