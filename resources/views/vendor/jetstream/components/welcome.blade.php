@@ -5,10 +5,10 @@
     </div>
 
     <div class="mt-8 text-2xl">
-        Welcome to Order System application!
+        Welcome to Order System Web Application!
     </div>
 
     <div class="mt-6 text-gray-500">
-       Applikasi ini dibuat untuk mempermudah administrasi order produk-produk claresta dari cabang, distributor dan agen ke PT. Sekar Ayu Sentosa.
+       Aplikasi ini dibuat untuk mempermudah administrasi order produk-produk claresta dari cabang, distributor dan agen ke PT. Sekar Ayu Sentosa.
     </div>
 </div>

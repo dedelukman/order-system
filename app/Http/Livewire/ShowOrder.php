@@ -99,8 +99,7 @@ class ShowOrder extends Component
 
     public function newOrder()
     {             
-        $id = DB::table('orders')->insertGetId(
-            [
+          $this->editing = Entities::create([
             'code' => (Branch::find($this->branch)->category =="DISTRIBUTOR" ? "OD" : 
             (Branch::find($this->branch)->category =="AGEN" ? "OA" : "OC") ) 
             ."/".Branch::find($this->branch)->code."/".date("ymdhi") ,
@@ -112,13 +111,12 @@ class ShowOrder extends Component
             'total' =>  0,
             'tax' =>  0,
             'created_at' =>  now(),
-            'diskon_value' =>  0
-            ]
-        );
+            'diskon_value' =>  0,
+        ]);
 
         try {
                            
-            return Redirect()->route('create.order',$id);            
+            return Redirect()->route('create.order',$this->editing);            
         } catch (\Exception $e) {
             $this->dispatchBrowserEvent('alert',[
                 'type'=>'error',
