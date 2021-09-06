@@ -5,12 +5,10 @@ namespace App\Http\Livewire;
 use App\Models\Branch;
 use Livewire\Component;
 use App\Models\Order as Entities;
-use App\Mail\RequestOrder;
-
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Support\Facades\Mail;
+
 
 
 
@@ -127,16 +125,7 @@ class ShowOrder extends Component
         }
     }
 
-    public function mailsend()
-    {
-        $details = [
-            'title' => 'Title: Mail from Real Programmer',
-            'body' => 'Body: This is for testing email using smtp'
-        ];
-
-        Mail::to('siddharthshukla089@gmail.com')->send(new RequestOrder($details));
-        
-    }
+   
 
 
     public function render()

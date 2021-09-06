@@ -2,13 +2,16 @@
 
 namespace App\Http\Livewire;
 
+use App\Mail\HoldOrder;
+use App\Mail\ProcessOrder;
 use App\Models\Branch;
 use App\Models\Order as EntityMaster;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\OrderDetail as Entities;
 use Livewire\WithPagination;
-use Illuminate\Support\Str;
+use App\Mail\RequestOrder;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 
 class CreateOrder extends Component
@@ -34,6 +37,7 @@ class CreateOrder extends Component
     public $diskonValue;    
     public $harga;    
     public $jumlahDetail;    
+    public $status;    
     public $dropdown;
     
 
@@ -166,7 +170,14 @@ class CreateOrder extends Component
                                 ->select('order_id', DB::raw('SUM(total) as jumlah'))
                                 ->groupBy('order_id')
                                 ->where('order_id', $this->order->id)
-                                ->first())->jumlah, 0,',','.');
+                                ->first())->jumlah, 0,',','.') === null ?
+                                0 : 
+                                number_format((DB::table('order_details') 
+                                ->select('order_id', DB::raw('SUM(total) as jumlah'))
+                                ->groupBy('order_id')
+                                ->where('order_id', $this->order->id)
+                                ->first())->jumlah, 0,',','.')
+                                ;
         $this->editingMaster->subtotal = str_replace('.','',$this->subtotal);
         $this->diskonUpdate();
     }
@@ -191,6 +202,57 @@ class CreateOrder extends Component
                 'message'=>"Data Tidak Berhasil Disimpan!!"
             ]);
         }
+    }
+
+    public function requestOrder()
+    {
+        $details = [
+            'title' => 'Title: Mail from Real Programmer',
+            'body' => 'Body: This is for testing email using smtp'
+        ];
+
+        Mail::to('abo@araya.co.id')->send(new RequestOrder($details));
+        $this->editingMaster->status="PENDING";
+        $this->editingMaster->save();
+        $this->dispatchBrowserEvent('alert',[
+            'type'=>'success',
+            'message'=>"Request Order Berhasil disimpan!!"
+        ]);
+        
+    }
+
+    public function holdOrder()
+    {
+        $details = [
+            'title' => 'Title: Mail from Real Programmer',
+            'body' => 'Body: This is for testing email using smtp'
+        ];
+
+        Mail::to('abo@araya.co.id')->send(new HoldOrder($details));
+        $this->editingMaster->status="HOLD";
+        $this->editingMaster->save();
+        $this->dispatchBrowserEvent('alert',[
+            'type'=>'warning',
+            'message'=>"Order Sementara di tahan!!"
+        ]);
+        
+    }
+
+    public function processOrder()
+    {
+        $details = [
+            'title' => 'Title: Mail from Real Programmer',
+            'body' => 'Body: This is for testing email using smtp'
+        ];
+
+        Mail::to('abo@araya.co.id')->send(new ProcessOrder($details));
+        $this->editingMaster->status="PROCESS";
+        $this->editingMaster->save();
+        $this->dispatchBrowserEvent('alert',[
+            'type'=>'warning',
+            'message'=>"Proses Order telah berhasil dikirim!!"
+        ]);
+        
     }
 
     public function render()

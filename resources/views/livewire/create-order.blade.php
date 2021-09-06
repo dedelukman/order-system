@@ -2,6 +2,24 @@
     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Tambah Order</h1>
                     <p class="mb-4">Tambah order Cabang, Distributor dan Agen.</p>
+
+                    <div class="card shadow mb-5 {{ Auth::user()->role === 'ADMIN'   && $this->editingMaster->status === 'PENDING' ? '' : 'hidden' }} ">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Konfirmasi - Apakah Order dapat dilanjutkan ke proses pengiriman? silahkan Klik tombol dibawah ini!</h6>
+                        </div>
+                        <div class="card-body"> 
+                            <div class="container ">                        
+                                <div class="row ">                                   
+                                    <div class="col-md-6 offset-md-4">
+                                        <a class="btn btn-danger btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#tolakModal">Tolak Order</a>                                            
+                                        <a class="btn btn-primary btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#requestModal">Konfirmasi</a>                                            
+                                    </div>
+                                 
+                                  </div>
+                                
+                            </div>
+                        </div>
+                    </div>
                    
                       <div class="card shadow mb-2">
                         <div class="card-header py-3">
@@ -29,8 +47,8 @@
                       </div>
                
 
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
+                    <!-- Data Detail -->
+                    <div class="card shadow mb-2">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Daftar Data Detail</h6>
                         </div>
@@ -50,7 +68,7 @@
                                     </div>
                                 </form> 
                                 <div >
-                                    <button class="btn btn-primary " data-toggle="modal" data-target="#formModal" wire:click="create">
+                                    <button class="btn btn-primary {{ $this->editingMaster->status === 'DRAFT' ? '' : 'hidden' }}" data-toggle="modal" data-target="#formModal" wire:click="create">
                                         <i class="fas fa-plus fa-sm"> New</i>
                                     </button>  
                                 </div>
@@ -81,7 +99,7 @@
                                                 <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                                                               
                                                 <td>{{ $entity->created_at->diffForHumans()}}</td>                                                                                             
                                                 <td>                                                                                                                                                       
-                                                    <div class="dropdown mb-4">
+                                                    <div class="dropdown mb-4  {{ $this->editingMaster->status === 'DRAFT' ? '' : 'hidden' }}">
                                                         <button class="dropdown-toggle" type="button"
                                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
@@ -205,6 +223,23 @@
                         </div>
                     </div>
 
+                    <div class="card shadow mb-2 {{ $this->total > 0  && $this->editingMaster->status === 'DRAFT' ? '' : 'hidden' }}">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Konfirmasi - Apakah Order sudah sesuai dengan permintaan anda? Apabila sudah, silahkan Klik tombol dibawah ini!</h6>
+                        </div>
+                        <div class="card-body"> 
+                            <div class="container">                        
+                                <div class="row">                                   
+                                    <div class="col-md-3 offset-md-5">
+                                        <a class="btn btn-primary btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#requestModal">Konfirmasi</a>                                            
+                                    </div>
+                                 
+                                  </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
         
         <!-- Modal Form-->
         <form action="">            
@@ -318,6 +353,48 @@
             </div>
             </div>
         </div>
+        </div>
+
+        <!-- Modal Request Order-->
+        <div wire:ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-red-400">
+                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Setelah Konfirmasi, Order Ini akan kami proses, dan Anda tidak bisa merubah data order ini, Apakah Anda Yakin Akan memproses order Ini!!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak, Masih Ada yang harus dirubah</button>
+                    <button type="button" class="btn btn-success" wire:click="requestOrder()" data-dismiss="modal">Ya Saya Yakin</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Tolak Order-->
+        <div wire:ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-red-400">
+                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda Yakin Akan menolak order ini order Ini!!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                    <button type="button" class="btn btn-success" wire:click="requestOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
+                </div>
+                </div>
+            </div>
         </div>
   
 </div>

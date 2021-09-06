@@ -24,7 +24,7 @@
                                     </div>
                                 </form> 
                                 <div >
-                                    <button class="btn btn-primary {{ Auth::user()->role === 'ADMIN' ? 'hidden' : ''}} "  wire:click="mailsend()">
+                                    <button class="btn btn-primary {{ Auth::user()->role === 'ADMIN' ? 'hidden' : ''}} "  wire:click="newOrder()">
                                         <i class="fas fa-plus fa-sm"> New</i>
                                     </button>  
                                     <button class="btn btn-primary {{ Auth::user()->role === 'USER' ? 'hidden' : ''}}" data-toggle="modal" data-target="#formModal" wire:click="create">
