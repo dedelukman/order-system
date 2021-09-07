@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use App\Mail\HoldOrder;
-use App\Mail\ProcessOrder;
 use App\Models\Branch;
 use App\Models\Order as EntityMaster;
 use Livewire\Component;
@@ -11,6 +9,8 @@ use App\Models\Product;
 use App\Models\OrderDetail as Entities;
 use Livewire\WithPagination;
 use App\Mail\RequestOrder;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 
@@ -39,12 +39,14 @@ class CreateOrder extends Component
     public $jumlahDetail;    
     public $status;    
     public $dropdown;
+    public $users;
     
 
     public function mount(EntityMaster $order){
         $this->editingMaster = $order;
         $this->dropdown = Product::where('active','1')->get();        
         $this->branch = Branch::find($order->branch_id);
+        $this->users = User::find($order->user_id);
         $this->description = $order->description;          
         $this->subtotal = number_format($order->subtotal, 0, ',', '.');          
         $this->total = number_format($order->total, 0, ',', '.');          
@@ -207,8 +209,13 @@ class CreateOrder extends Component
     public function requestOrder()
     {
         $details = [
-            'title' => 'Title: Mail from Real Programmer',
-            'body' => 'Body: This is for testing email using smtp'
+            'url' => url("/order/create/{$this->editingMaster->id}"),
+            'from' =>  Auth::user()->email,
+            'subject' => 'Request Order '. $this->branch->name,
+            'orderNo' => 'Order Number : '. $this->editingMaster->code,
+            'title' => 'Verifikasi Hutang Pelanggan',
+            'button' => 'Konfirmasi',
+            'body' => 'Mohon Konfirmasi Request Order atas '. $this->branch->name .' senilai Rp. '. number_format($this->editingMaster->total , 0, ',', '.')
         ];
 
         Mail::to('abo@araya.co.id')->send(new RequestOrder($details));
@@ -224,16 +231,22 @@ class CreateOrder extends Component
     public function holdOrder()
     {
         $details = [
-            'title' => 'Title: Mail from Real Programmer',
-            'body' => 'Body: This is for testing email using smtp'
+            'url' => url("/order/create/{$this->editingMaster->id}"),
+            'from' =>  Auth::user()->email,
+            'subject' => 'Order Ditolak ',
+            'orderNo' => 'Order Number : '. $this->editingMaster->code,
+            'title' => 'Penolakan Order',
+            'button' => 'Lihat Order',
+            'body' => 'Order Anda untuk sementara tidak dapat kami proses, silahkan selesaikan administrasi dengan bagian keuagan, 
+            apabila sudah, anda dapat mengajukan kembali order yang telah Anda buat, dengan mengklik tombol dibawah ini.'
         ];
 
-        Mail::to('abo@araya.co.id')->send(new HoldOrder($details));
+        Mail::to($this->users->email)->send(new RequestOrder($details));
         $this->editingMaster->status="HOLD";
         $this->editingMaster->save();
         $this->dispatchBrowserEvent('alert',[
             'type'=>'warning',
-            'message'=>"Order Sementara di tahan!!"
+            'message'=>"Penolakan Order Berhasil kami kirim ke Pelanggan!!"
         ]);
         
     }
@@ -241,16 +254,21 @@ class CreateOrder extends Component
     public function processOrder()
     {
         $details = [
-            'title' => 'Title: Mail from Real Programmer',
-            'body' => 'Body: This is for testing email using smtp'
+            'url' => url("/order/create/{$this->editingMaster->id}"),
+            'from' =>  Auth::user()->email,
+            'subject' => 'Request Order ',
+            'orderNo' => 'Order Number : '. $this->editingMaster->code,
+            'title' => 'Process Order',
+            'button' => 'Detail Order',
+            'body' => 'Mohon untuk segera kirim order dari.'. $this->branch->name
         ];
 
-        Mail::to('abo@araya.co.id')->send(new ProcessOrder($details));
+        Mail::to('gudang@sekarayu.co.id')->send(new RequestOrder($details));
         $this->editingMaster->status="PROCESS";
         $this->editingMaster->save();
         $this->dispatchBrowserEvent('alert',[
-            'type'=>'warning',
-            'message'=>"Proses Order telah berhasil dikirim!!"
+            'type'=>'success',
+            'message'=>"Order Berhasil kami kirim ke Pelanggan!!"
         ]);
         
     }

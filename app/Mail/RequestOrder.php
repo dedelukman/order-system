@@ -11,14 +11,16 @@ class RequestOrder extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $details;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($details)
     {
-        //
+        $this->details = $details;
     }
 
     /**
@@ -28,6 +30,8 @@ class RequestOrder extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.request-order');
+        return $this->from($this->details['from'])
+                    ->subject($this->details['subject'])
+                    ->markdown('emails.request-order');
     }
 }

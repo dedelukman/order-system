@@ -11,8 +11,8 @@
                             <div class="container ">                        
                                 <div class="row ">                                   
                                     <div class="col-md-6 offset-md-4">
-                                        <a class="btn btn-danger btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#tolakModal">Tolak Order</a>                                            
-                                        <a class="btn btn-primary btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#requestModal">Konfirmasi</a>                                            
+                                        <a class="btn btn-danger btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#holdModal">Tolak Order</a>                                            
+                                        <a class="btn btn-primary btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#processModal">Konfirmasi</a>                                            
                                     </div>
                                  
                                   </div>
@@ -223,7 +223,7 @@
                         </div>
                     </div>
 
-                    <div class="card shadow mb-2 {{ $this->total > 0  && $this->editingMaster->status === 'DRAFT' ? '' : 'hidden' }}">
+                    <div class="card shadow mb-2 {{ $this->total > 0  && ($this->editingMaster->status === 'DRAFT' || $this->editingMaster->status === 'HOLD') ? '' : 'hidden' }}">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Konfirmasi - Apakah Order sudah sesuai dengan permintaan anda? Apabila sudah, silahkan Klik tombol dibawah ini!</h6>
                         </div>
@@ -377,7 +377,7 @@
         </div>
 
         <!-- Modal Tolak Order-->
-        <div wire:ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+        <div wire:ignore.self class="modal fade" id="holdModal" tabindex="-1" role="dialog" aria-labelledby="holdModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header bg-red-400">
@@ -387,11 +387,32 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Apakah Anda Yakin Akan menolak order ini order Ini!!
+                    Apakah Anda Yakin Akan menolak order Ini!!
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                    <button type="button" class="btn btn-success" wire:click="requestOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
+                    <button type="button" class="btn btn-success" wire:click="holdOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- Modal Process Order-->
+         <div wire:ignore.self class="modal fade" id="processModal" tabindex="-1" role="dialog" aria-labelledby="processModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-red-400">
+                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda Yakin Akan melanjutkan order ini, ke proses pengiriman!!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                    <button type="button" class="btn btn-success" wire:click="processOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
                 </div>
                 </div>
             </div>
