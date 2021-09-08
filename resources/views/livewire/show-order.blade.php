@@ -57,7 +57,37 @@
                                                 <td>{{ $entity->nameUser}}</td>
                                                 {{-- <td>Rp {{ number_format($entity->subtotal , 0, ',', '.') }}</td> --}}
                                                 <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                
-                                                <td>{{ $entity->status}}</td>
+                                                <td style="align-content: center">                                                   
+                                                    @if ($entity->status == 'DRAFT')                                                                                                     
+                                                        <a  class="btn btn-warning btn-icon-split" >
+                                                            <span class="icon text-white-50">
+                                                                <i class="fas fa-question"></i>
+                                                            </span>
+                                                            <span class="text">DRAFT</span>
+                                                        </a>
+                                                    @elseif ($entity->status == 'PENDING')                                                                      
+                                                         <a  class="btn btn-info btn-icon-split" >
+                                                            <span class="icon text-white-50">
+                                                                <i class="fas fa-pause"></i>
+                                                            </span>
+                                                            <span class="text">PENDING</span>
+                                                        </a>
+                                                    @elseif ($entity->status == 'HOLD')                                                                      
+                                                        <a  class="btn btn-danger btn-icon-split" >
+                                                           <span class="icon text-white-50">
+                                                               <i class="fas fa-times"></i>
+                                                           </span>
+                                                           <span class="text">HOLD</span>
+                                                       </a>
+                                                    @else                                                                    
+                                                         <a  class="btn btn-success btn-icon-split" >
+                                                            <span class="icon text-white-50">
+                                                                <i class="fas fa-check"></i>
+                                                            </span>
+                                                            <span class="text">PROCESS</span>
+                                                        </a>
+                                                    @endif
+                                                </td>
                                                 <td>{{ $entity->created_at->diffForHumans()}}</td>                                                                                             
                                                 <td>                                                                                                                                                       
                                                     <div class="dropdown mb-4">

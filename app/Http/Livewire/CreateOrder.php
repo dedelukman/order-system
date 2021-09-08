@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+
 use App\Models\Branch;
 use App\Models\Order as EntityMaster;
 use Livewire\Component;
@@ -13,6 +14,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use App\Models\connection;
+use PDO;
 
 class CreateOrder extends Component
 {
@@ -21,6 +24,7 @@ class CreateOrder extends Component
     public EntityMaster $editingMaster;
 
     public $order;
+    public $orderCode;
     public $search;
     public $sortField='code';
     public $sortDirection ='desc';    
@@ -28,32 +32,56 @@ class CreateOrder extends Component
     public Entities $editing;
     public Entities $deleting;
     public $branch;    
+    public $branchCode;    
     public $description;    
     public $subtotal;    
+    public $subtotalV;    
     public $total;    
+    public $totalV;    
     public $ppn;    
     public $diskon;    
     public $ppnValue;    
+    public $ppnValueV;    
     public $diskonValue;    
+    public $diskonValueV;    
     public $harga;    
     public $jumlahDetail;    
     public $status;    
     public $dropdown;
     public $users;
+    public $salesorder;
+    public $karyawan = 'dde';
+    public $satuan = 'unit';
+    public $tanggal;
+    public $isppn;
+    public $hdkp;
+    public $codeDetail;
+    public $quantityDetail;
+    public $priceDetail;
+    public $totalDetail;
+
     
 
     public function mount(EntityMaster $order){
         $this->editingMaster = $order;
+        $this->orderCode = $order->code;
         $this->dropdown = Product::where('active','1')->get();        
         $this->branch = Branch::find($order->branch_id);
+        $this->branchCode = $this->branch->code;
         $this->users = User::find($order->user_id);
         $this->description = $order->description;          
         $this->subtotal = number_format($order->subtotal, 0, ',', '.');          
+        $this->subtotalV = $order->subtotal;        
         $this->total = number_format($order->total, 0, ',', '.');          
+        $this->totalV = $order->total;        
         $this->ppnValue = number_format($order->tax, 0, ',', '.');          
+        $this->ppnValueV = $order->tax;         
         $this->ppn = number_format($order->hdkp === "0.00" ?  "10.00" : ($order->tax/$order->hdkp)*100,0);
+        $this->isppn = $this->ppn !== 0 ? '1' : '0';
         $this->diskon= $order->diskon;          
         $this->diskonValue=number_format($order->diskon_value, 0, ',', '.'); 
+        $this->diskonValueV=$order->diskon_value; 
+        $this->hdkp = $order->hdkp;
             
     }
   
@@ -208,23 +236,28 @@ class CreateOrder extends Component
 
     public function requestOrder()
     {
-        $details = [
-            'url' => url("/order/create/{$this->editingMaster->id}"),
-            'from' =>  Auth::user()->email,
-            'subject' => 'Request Order '. $this->branch->name,
-            'orderNo' => 'Order Number : '. $this->editingMaster->code,
-            'title' => 'Verifikasi Hutang Pelanggan',
-            'button' => 'Konfirmasi',
-            'body' => 'Mohon Konfirmasi Request Order atas '. $this->branch->name .' senilai Rp. '. number_format($this->editingMaster->total , 0, ',', '.')
-        ];
+        if($this->branch->category == 'CABANG' || $this->branch->category == 'PUSAT' ){
+            $this->salesOrder();
+        }else{
+            $details = [
+                'url' => url("/order/create/{$this->editingMaster->id}"),
+                'from' =>  Auth::user()->email,
+                'subject' => 'Request Order '. $this->branch->name,
+                'orderNo' => 'Order Number : '. $this->editingMaster->code,
+                'title' => 'Verifikasi Hutang Pelanggan',
+                'button' => 'Konfirmasi',
+                'body' => 'Mohon Konfirmasi Request Order atas '. $this->branch->name .' senilai Rp. '. number_format($this->editingMaster->total , 0, ',', '.')
+            ];
 
-        Mail::to('abo@araya.co.id')->send(new RequestOrder($details));
-        $this->editingMaster->status="PENDING";
-        $this->editingMaster->save();
-        $this->dispatchBrowserEvent('alert',[
-            'type'=>'success',
-            'message'=>"Request Order Berhasil disimpan!!"
-        ]);
+            Mail::to('abo@araya.co.id')->send(new RequestOrder($details));
+            $this->editingMaster->status="PENDING";
+            $this->editingMaster->save();
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'success',
+                'message'=>"Request Order Berhasil disimpan!!"
+            ]);
+        }
+        
         
     }
 
@@ -260,7 +293,7 @@ class CreateOrder extends Component
             'orderNo' => 'Order Number : '. $this->editingMaster->code,
             'title' => 'Process Order',
             'button' => 'Detail Order',
-            'body' => 'Mohon untuk segera kirim order dari.'. $this->branch->name
+            'body' => 'Mohon untuk segera kirim order dari.'. $this->branch->name . ' dengan No SO : '.$this->salesorder,
         ];
 
         Mail::to('gudang@sekarayu.co.id')->send(new RequestOrder($details));
@@ -268,8 +301,62 @@ class CreateOrder extends Component
         $this->editingMaster->save();
         $this->dispatchBrowserEvent('alert',[
             'type'=>'success',
-            'message'=>"Order Berhasil kami kirim ke Pelanggan!!"
+            'message'=>"Proses Kirim akan segera disiapkan oleh Bagian Gudang!!"
         ]);
+        
+    }
+
+    public function salesOrder(){
+        $stmt = connection::connect()->prepare("SELECT LPAD(IFNULL(RIGHT(MAX(NoSO),6),0)+1,8,'SO000000') AS newNoSO FROM SO");			
+		$stmt -> execute();
+		$this->salesorder = $stmt -> fetch(PDO::FETCH_COLUMN);
+        $this->tanggal=date('Y-m-d');
+        
+
+        $stmt = Connection::connect()->prepare("INSERT INTO SO 
+        (NoSo, Tanggal, KodePelanggan, Catatan, KodeKaryawan, Subtotal, Diskon, Potongan, HDKP, isPPN, PPn, Total) 
+        VALUES (:NoSo, :Tanggal, :KodePelanggan, :Catatan, :KodeKaryawan, :Subtotal, :Diskon, :Potongan, :HDKP, :isPPN, :PPn, :Total)");
+
+        $stmt->bindParam(":NoSo", $this->salesorder, PDO::PARAM_STR);
+        $stmt->bindParam(":Tanggal", $this->tanggal, PDO::PARAM_STR);
+        $stmt->bindParam(":KodePelanggan", $this->branchCode, PDO::PARAM_STR);
+        $stmt->bindParam(":Catatan", $this->orderCode, PDO::PARAM_STR);
+        $stmt->bindParam(":KodeKaryawan", $this->karyawan, PDO::PARAM_STR);
+        $stmt->bindParam(":Subtotal", $this->subtotalV, PDO::PARAM_STR);
+        $stmt->bindParam(":Diskon", $this->diskon, PDO::PARAM_STR);
+        $stmt->bindParam(":Potongan", $this->diskonValueV, PDO::PARAM_STR);
+        $stmt->bindParam(":HDKP", $this->hdkp, PDO::PARAM_STR);
+        $stmt->bindParam(":isPPN",$this->isppn, PDO::PARAM_INT);
+        $stmt->bindParam(":PPn", $this->ppnValueV, PDO::PARAM_STR);
+        $stmt->bindParam(":Total", $this->totalV, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $stmt = Connection::connect()->prepare("INSERT INTO DSO 
+        (NoSo, KodeBarang, Kuantitas, Satuan, Harga, Jumlah) 
+        VALUES (:NoSo, :KodeBarang, :Kuantitas, :Satuan, :Harga, :Jumlah)");
+
+        $orderlist = Entities::leftJoin('products', 'order_details.product_id','=','products.id')            
+                ->select('order_details.*', 'products.code as codeProduct')
+                ->where('order_id',$this->order->id)->get();
+        
+       foreach ($orderlist as $item) {
+
+        $this->codeDetail = $item->codeProduct;
+        $this->quantityDetail = $item->quantity;
+        $this->priceDetail =$item->price;
+        $this->totalDetail = $item->total;
+
+            $stmt->bindParam(":NoSo", $this->salesorder, PDO::PARAM_STR);
+            $stmt->bindParam(":KodeBarang",$this->codeDetail , PDO::PARAM_STR);
+            $stmt->bindParam(":Kuantitas", $this->quantityDetail, PDO::PARAM_STR);
+            $stmt->bindParam(":Satuan", $this->satuan, PDO::PARAM_STR);
+            $stmt->bindParam(":Harga", $this->priceDetail, PDO::PARAM_STR);
+            $stmt->bindParam(":Jumlah", $this->totalDetail, PDO::PARAM_STR);          
+            $stmt->execute();
+            
+        }
+         
+        $this->processOrder();
         
     }
 

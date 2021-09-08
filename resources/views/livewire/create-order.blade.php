@@ -13,6 +13,7 @@
                                     <div class="col-md-6 offset-md-4">
                                         <a class="btn btn-danger btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#holdModal">Tolak Order</a>                                            
                                         <a class="btn btn-primary btn-lg" role="button" aria-disabled="true" data-toggle="modal" data-target="#processModal">Konfirmasi</a>                                            
+                                        
                                     </div>
                                  
                                   </div>
@@ -20,7 +21,7 @@
                             </div>
                         </div>
                     </div>
-                   
+                                
                       <div class="card shadow mb-2">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Data Master</h6>
@@ -412,7 +413,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                    <button type="button" class="btn btn-success" wire:click="processOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
+                    <button type="button" class="btn btn-success" wire:click="salesOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
                 </div>
                 </div>
             </div>
