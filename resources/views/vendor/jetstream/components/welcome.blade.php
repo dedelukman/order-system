@@ -8,7 +8,11 @@
         Welcome to Order System Web Application!
     </div>
 
-    <div class="mt-6 text-gray-500">
+    <div class="mt-6text-gray-500">
        Aplikasi ini dibuat untuk mempermudah administrasi order produk-produk claresta dari cabang, distributor dan agen ke PT. Sekar Ayu Sentosa.
     </div>
+    <br/>
+    <div lass="mt-6 " style="background-image: url({{ asset('theme/img/dashboard.jpg')}}); min-height: 100vh; background-size: cover;" >
+       .
+     </div>
 </div>
