@@ -17,8 +17,8 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->foreignId('user_id')->references('id')->on('users');
-            $table->string('code')->unique();
-            $table->string('status')->default("DRAFT");
+            $table->string('code',30)->unique();
+            $table->string('status',20)->default("DRAFT");
             $table->text('description')->nullable();
             $table->decimal('subtotal',15,2)->default("0");            
             $table->decimal('diskon',5,2)->default("0");

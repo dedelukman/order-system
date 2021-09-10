@@ -64,7 +64,7 @@ class CreateOrder extends Component
 
     public function mount(EntityMaster $order){
         $this->editingMaster = $order;
-        $this->orderCode = $order->code;
+        $this->orderCode = $order->code.'/'.$order->description;
         $this->dropdown = Product::where('active','1')->get();        
         $this->branch = Branch::find($order->branch_id);
         $this->branchCode = $this->branch->code;
@@ -237,7 +237,10 @@ class CreateOrder extends Component
     public function requestOrder()
     {
         if($this->branch->category == 'CABANG' || $this->branch->category == 'PUSAT' ){
-            $this->salesOrder();
+          
+                $this->salesOrder();
+      
+            
         }else{
             $details = [
                 'url' => url("/order/create/{$this->editingMaster->id}"),
@@ -246,6 +249,7 @@ class CreateOrder extends Component
                 'orderNo' => 'Order Number : '. $this->editingMaster->code,
                 'title' => 'Verifikasi Hutang Pelanggan',
                 'button' => 'Konfirmasi',
+                'note' => $this->editingMaster->description,
                 'body' => 'Mohon Konfirmasi Request Order atas '. $this->branch->name .' senilai Rp. '. number_format($this->editingMaster->total , 0, ',', '.')
             ];
 
@@ -270,6 +274,7 @@ class CreateOrder extends Component
             'orderNo' => 'Order Number : '. $this->editingMaster->code,
             'title' => 'Penolakan Order',
             'button' => 'Lihat Order',
+            'note' => $this->editingMaster->description,
             'body' => 'Order Anda untuk sementara tidak dapat kami proses, silahkan selesaikan administrasi dengan bagian keuagan, 
             apabila sudah, anda dapat mengajukan kembali order yang telah Anda buat, dengan mengklik tombol dibawah ini.'
         ];
@@ -293,6 +298,7 @@ class CreateOrder extends Component
             'orderNo' => 'Order Number : '. $this->editingMaster->code,
             'title' => 'Process Order',
             'button' => 'Detail Order',
+            'note' => $this->editingMaster->description,
             'body' => 'Mohon untuk segera kirim order dari.'. $this->branch->name . ' dengan No SO : '.$this->salesorder,
         ];
 
@@ -307,6 +313,8 @@ class CreateOrder extends Component
     }
 
     public function salesOrder(){
+        try{
+                  
         $stmt = connection::connect()->prepare("SELECT LPAD(IFNULL(RIGHT(MAX(NoSO),6),0)+1,8,'SO000000') AS newNoSO FROM SO");			
 		$stmt -> execute();
 		$this->salesorder = $stmt -> fetch(PDO::FETCH_COLUMN);
@@ -357,6 +365,13 @@ class CreateOrder extends Component
         }
          
         $this->processOrder();
+
+        }catch(\Exception $e){
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'error',
+                'message'=>"Data Tidak Berhasil Disimpan!!"
+            ]);
+        }
         
     }
 

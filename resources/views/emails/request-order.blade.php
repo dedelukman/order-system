@@ -11,6 +11,8 @@
 {{ $details['button'] }}
 @endcomponent
 
+Note : {{ $details['note'] }}
+
 
 Terima Kasih,<br>
 {{ config('app.name') }}

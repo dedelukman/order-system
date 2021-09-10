@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Http\Requests\LoginRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -42,6 +45,20 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        });
+
+        // add active role
+        Fortify::authenticateUsing(function (LoginRequest $request) {
+            $user = User::where('email', $request->email)
+                        ->where('active', 1)
+                        ->first();
+    
+            if (
+                $user &&
+                Hash::check($request->password, $user->password)
+            ) {
+                return $user;
+            }
         });
     }
 }
