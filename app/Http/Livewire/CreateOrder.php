@@ -14,7 +14,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
-use App\Models\connection;
+use App\Models\Connection;
 use PDO;
 
 class CreateOrder extends Component
@@ -315,7 +315,7 @@ class CreateOrder extends Component
     public function salesOrder(){
         try{
                   
-        $stmt = connection::connect()->prepare("SELECT LPAD(IFNULL(RIGHT(MAX(NoSO),6),0)+1,8,'SO000000') AS newNoSO FROM SO");			
+        $stmt = Connection::connect()->prepare("SELECT LPAD(IFNULL(RIGHT(MAX(NoSO),6),0)+1,8,'SO000000') AS newNoSO FROM SO");			
 		$stmt -> execute();
 		$this->salesorder = $stmt -> fetch(PDO::FETCH_COLUMN);
         $this->tanggal=date('Y-m-d');

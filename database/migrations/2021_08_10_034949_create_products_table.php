@@ -20,6 +20,8 @@ class CreateProductsTable extends Migration
             $table->string('name',100)->unique();
             $table->integer('hj')->default("0");
             $table->integer('het2')->default("0");
+            $table->integer('stok1')->default("0");
+            $table->integer('stok2')->default("0");            
             $table->string('photo')->nullable();
             $table->string('slug')->nullable();
             $table->text('description')->nullable();           

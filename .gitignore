@@ -13,4 +13,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-/app/Models/connection.php
+/app/Models/Connection.php
+/app/Models/ConnectionLampung.php
