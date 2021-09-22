@@ -259,7 +259,7 @@
                     <div class="modal-body">                       
                          <div class="form-group">
                             <label for="name">Produk</label>                           
-                              <select class="form-control" name="city_id" wire:model.defer="editing.product_id"  wire:click="productUpdate()" >
+                              <select class="form-control" name="city_id" wire:model.defer="editing.product_id"  wire:change="productUpdate()" >
                                 <option value="" selected>Pilih Produk</option>
                         
                                 @foreach ($dropdown as $item)
@@ -280,7 +280,35 @@
                                                               
                             </div>      
                            
-                        </div>   
+                        </div> 
+                          {{-- stok  --}}
+                        <div class="form-group row">
+                            <div class="col-6">
+                                <label for="exampleInputEmail1">Stok Jombang</label>
+                                <div class="input-group">                            
+                                    <input type="number" class="form-control" aria-label="quantity" min="0" 
+                                    wire:model.defer="stok1" readonly>
+                                        <div class="input-group-append">
+                                        <span class="input-group-text">Unit</span>                            
+                                    </div>                             
+                                </div>      
+                            </div>
+                            <div class="col-6">
+                                <label for="exampleInputEmail1">Stok Lampung</label>
+                                <div class="input-group">                            
+                                    <input type="number" class="form-control" aria-label="quantity" min="0" 
+                                    wire:model.defer="stok2" readonly>
+                                        <div class="input-group-append">
+                                        <span class="input-group-text">Unit</span>                            
+                                    </div>                             
+                                </div>      
+                            </div>
+                           
+                           
+                        </div>     
+
+
+                          {{-- stok --}}
                         <div class="form-group">
                             <label for="exampleInputEmail1">Kuantitas</label>
                             <div class="input-group">                            

@@ -39,6 +39,8 @@
                                             <th wire:click="sortBy('code')" ><i class="fa fa-fw fa-sort"></i>Kode</th>
                                             <th wire:click="sortBy('name')" ><i class="fa fa-fw fa-sort"></i>Nama</th>
                                             <th wire:click="sortBy('nameCategory')" ><i class="fa fa-fw fa-sort"></i>Kategori</th>
+                                            <th wire:click="sortBy('stok1')" ><i class="fa fa-fw fa-sort"></i>JMB</th>
+                                            <th wire:click="sortBy('stok2')" ><i class="fa fa-fw fa-sort"></i>LMP</th>
                                             {{-- <th wire:click="sortBy('photo')" ><i class="fa fa-fw fa-sort"></i>Photo</th> --}}
                                             <th wire:click="sortBy('active')" ><i class="fa fa-fw fa-sort"></i>Status</th>                                            
                                             <th></th>
@@ -51,6 +53,8 @@
                                                 <td>{{ $entity->code }}</td>
                                                 <td>{{ $entity->name }}</td>
                                                 <td>{{ $entity->nameCategory}}</td>
+                                                <td>{{ $entity->stok1}}</td>
+                                                <td>{{ $entity->stok2}}</td>
                                                 {{-- <td>{{ $entity->photo}}</td> --}}
                                                
                                                 <td style="align-content: center">

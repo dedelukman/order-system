@@ -45,6 +45,8 @@ class CreateOrder extends Component
     public $diskonValue;    
     public $diskonValueV;    
     public $harga;    
+    public $stok1;    
+    public $stok2;    
     public $jumlahDetail;    
     public $status;    
     public $dropdown;
@@ -128,6 +130,8 @@ class CreateOrder extends Component
         (Product::find($this->editing->product_id))->het2 :
         (Product::find($this->editing->product_id))->hj,0,',','.');
         $this->editing->price = str_replace('.','',$this->harga);
+        $this->stok1 = (Product::find($this->editing->product_id))->stok1;
+        $this->stok2 = (Product::find($this->editing->product_id))->stok2;
        $this->totalUpdate();
     }
 
