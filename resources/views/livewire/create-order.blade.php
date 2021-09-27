@@ -29,15 +29,20 @@
                         <div class="card-body"> 
                             <form class="">
                                 <div class="form-group row ">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <label for="code">No Order</label>
-                                        <input type="text" class="form-control" id="code" readonly value="{{$editingMaster->code }}">
-                                
+                                        <input type="text" class="form-control" id="code" readonly value="{{$editingMaster->code }}">                                
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <label for="branch">Pelanggan</label>
-                                        <input type="text" class="form-control" id="branch" readonly value="{{$branch->name }}">
-                            
+                                        <input type="text" class="form-control" id="branch" readonly value="{{$branch->name }}">                            
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="branch">Kirim dari Gudang</label>
+                                        <select class="form-control" name="warehouse" wire:model.defer="warehouse"  wire:change="gudangUpdate()" {{ Auth::user()->role === 'USER' ? "disabled" : ''}} >                                                                                
+                                            <option value="1" >JOMBANG</option>
+                                            <option value="2" >LAMPUNG</option>                                                                                                                    
+                                        </select>                           
                                     </div>
                                 
                                 </div>                               
@@ -46,6 +51,8 @@
 
                         </div>
                       </div>
+                     
+                      {{ $this->spk }}
                
 
                     <!-- Data Detail -->
@@ -69,7 +76,7 @@
                                     </div>
                                 </form> 
                                 <div >
-                                    <button class="btn btn-primary {{ $this->editingMaster->status === 'DRAFT' ? '' : 'hidden' }}" data-toggle="modal" data-target="#formModal" wire:click="create">
+                                    <button class="btn btn-primary {{ $this->editingMaster->status === 'DRAFT' || ($this->editingMaster->status !== 'PROCESS' && Auth::user()->role === 'ADMIN') ? '' : 'hidden' }}" data-toggle="modal" data-target="#formModal" wire:click="create">
                                         <i class="fas fa-plus fa-sm"> New</i>
                                     </button>  
                                 </div>
@@ -81,6 +88,8 @@
                                     <thead>
                                         <tr>
                                             <th wire:click="sortBy('nameProduct')" ><i class="fa fa-fw fa-sort"></i>Produk</th>
+                                            <th wire:click="sortBy('stok1')" class="{{ $warehouse === 2 ? 'hidden' : ''}} "><i class="fa fa-fw fa-sort"></i>Stok</th>
+                                            <th wire:click="sortBy('stok2')" class="{{ $warehouse === 1 ? 'hidden' : ''}} "><i class="fa fa-fw fa-sort"></i>Stok</th>
                                             <th wire:click="sortBy('quantity')" ><i class="fa fa-fw fa-sort"></i>Qty</th>                                              
                                             <th wire:click="sortBy('price')" ><i class="fa fa-fw fa-sort"></i>Harga</th>
                                             <th wire:click="sortBy('diskon')" class="{{ Auth::user()->role === 'USER' ? 'hidden' : ''}}" ><i class="fa fa-fw fa-sort"></i>Diskon</th>                                            
@@ -94,13 +103,15 @@
                                         @forelse($entities as $entity )
                                             <tr wire:loading.class.delay="opacity-50">                                                
                                                 <td>{{ $entity->nameProduct }}</td>
+                                                <td  class="{{ $warehouse === 2 ? 'hidden' : ''}} ">{{ $entity->stok1 }}</td>
+                                                <td  class="{{ $warehouse === 1 ? 'hidden' : ''}} ">{{ $entity->stok2 }}</td>
                                                 <td>{{ $entity->quantity}}</td>
                                                 <td>Rp {{ number_format($entity->price , 0, ',', '.') }}</td>
                                                 <td class="{{ Auth::user()->role === 'USER' ? 'hidden' : ''}}" >{{ number_format($entity->diskon , 0, ',', '.')}}%</td>
                                                 <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                                                               
                                                 <td>{{ $entity->created_at->diffForHumans()}}</td>                                                                                             
                                                 <td>                                                                                                                                                       
-                                                    <div class="dropdown mb-4  {{ $this->editingMaster->status === 'DRAFT' ? '' : 'hidden' }}">
+                                                    <div class="dropdown mb-4  {{ $this->editingMaster->status === 'DRAFT' || Auth::user()->role === 'ADMIN' ? '' : 'hidden' }}">
                                                         <button class="dropdown-toggle" type="button"
                                                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
@@ -282,8 +293,7 @@
                            
                         </div> 
                           {{-- stok  --}}
-                        <div class="form-group row">
-                            <div class="col-6">
+                        <div class="form-group {{ $warehouse === 2 ? 'hidden' : ''}} ">
                                 <label for="exampleInputEmail1">Stok Jombang</label>
                                 <div class="input-group">                            
                                     <input type="number" class="form-control" aria-label="quantity" min="0" 
@@ -291,9 +301,9 @@
                                         <div class="input-group-append">
                                         <span class="input-group-text">Unit</span>                            
                                     </div>                             
-                                </div>      
-                            </div>
-                            <div class="col-6">
+                                </div>          
+                        </div> 
+                        <div class="form-group  {{ $warehouse === 1 ? 'hidden' : ''}} ">                          
                                 <label for="exampleInputEmail1">Stok Lampung</label>
                                 <div class="input-group">                            
                                     <input type="number" class="form-control" aria-label="quantity" min="0" 
@@ -302,10 +312,7 @@
                                         <span class="input-group-text">Unit</span>                            
                                     </div>                             
                                 </div>      
-                            </div>
-                           
-                           
-                        </div>     
+                        </div>         
 
 
                           {{-- stok --}}

@@ -43,6 +43,7 @@
                                             <th wire:click="sortBy('nameUser')" ><i class="fa fa-fw fa-sort"></i>User</th>  
                                             {{-- <th wire:click="sortBy('subtotal')" ><i class="fa fa-fw fa-sort"></i>Subtotal</th> --}}
                                             <th wire:click="sortBy('total')" ><i class="fa fa-fw fa-sort"></i>Total</th>
+                                            <th wire:click="sortBy('warehouse')" ><i class="fa fa-fw fa-sort"></i>Gudang</th>
                                             <th wire:click="sortBy('status')" ><i class="fa fa-fw fa-sort"></i>Status</th>                                            
                                             <th wire:click="sortBy('created_at')" ><i class="fa fa-fw fa-sort"></i>Dibuat</th>                                            
                                             <th></th>
@@ -56,7 +57,8 @@
                                                 <td class=" {{ Auth::user()->role === 'USER' ? 'hidden' : ''}}">{{ $entity->nameBranch }}</td>
                                                 <td>{{ $entity->nameUser}}</td>
                                                 {{-- <td>Rp {{ number_format($entity->subtotal , 0, ',', '.') }}</td> --}}
-                                                <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>                                                
+                                                <td>Rp {{ number_format($entity->total , 0, ',', '.') }}</td>  
+                                                <td>{{ $entity->warehouse === 1 ? 'JOMBANG' : 'LAMPUNG'}}</td>                                              
                                                 <td style="align-content: center">                                                   
                                                     @if ($entity->status == 'DRAFT')                                                                                                     
                                                         <a  class="btn btn-warning btn-icon-split" >
@@ -88,6 +90,7 @@
                                                         </a>
                                                     @endif
                                                 </td>
+                                              
                                                 <td>{{ $entity->created_at->diffForHumans()}}</td>                                                                                             
                                                 <td>                                                                                                                                                       
                                                     <div class="dropdown mb-4">

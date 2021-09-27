@@ -21,6 +21,7 @@ class CreateBranchesTable extends Migration
             $table->string('category',50)->default('AGEN');
             $table->string('price')->default('HET2');
             $table->decimal('discount');
+            $table->integer('warehouse')->default("1");
             $table->boolean('active')->default(false);
             $table->softDeletes();
             $table->timestamps();

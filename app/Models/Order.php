@@ -15,6 +15,7 @@ class Order extends Model
         'branch_id',
         'user_id',
         'status',
+        'warehouse',
         'description',        
         'subtotal',        
         'diskon',        

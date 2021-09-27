@@ -81,6 +81,7 @@ class ShowOrder extends Component
         ."/".Branch::find($this->editing->branch_id)->code."/".date("ymdhi") ;
         $this->editing->user_id = Auth::id();
         $this->editing->diskon =(Branch::find($this->editing->branch_id)->discount);
+        $this->editing->warehouse =(Branch::find($this->editing->branch_id)->warehouse);
         $this->editing->subtotal = 0;
         $this->editing->hdkp = 0;
         $this->editing->total = 0;
@@ -106,6 +107,7 @@ class ShowOrder extends Component
             'user_id' =>  Auth::id(),
             'branch_id' =>  $this->branch,
             'diskon' =>  (Branch::find($this->branch)->discount),
+            'warehouse' =>  (Branch::find($this->branch)->warehouse),
             'subtotal' =>  0,
             'hdkp' =>  0,
             'total' =>  0,

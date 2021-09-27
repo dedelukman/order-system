@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Models\Connection;
+use App\Models\ConnectionLampung;
 use PDO;
 
 class CreateOrder extends Component
@@ -34,12 +35,14 @@ class CreateOrder extends Component
     public $branch;    
     public $branchCode;    
     public $description;    
+    public $warehouse;    
     public $subtotal;    
     public $subtotalV;    
     public $total;    
     public $totalV;    
     public $ppn;    
     public $diskon;    
+    public $diskonExport;    
     public $ppnValue;    
     public $ppnValueV;    
     public $diskonValue;    
@@ -52,6 +55,7 @@ class CreateOrder extends Component
     public $dropdown;
     public $users;
     public $salesorder;
+    public $spk;
     public $karyawan = 'dde';
     public $satuan = 'unit';
     public $tanggal;
@@ -65,6 +69,11 @@ class CreateOrder extends Component
     
 
     public function mount(EntityMaster $order){
+        $this->updateForm($order);
+            
+    }
+
+    public function updateForm( $order){
         $this->editingMaster = $order;
         $this->orderCode = $order->code.'/'.$order->description;
         $this->dropdown = Product::where('active','1')->get();        
@@ -72,6 +81,7 @@ class CreateOrder extends Component
         $this->branchCode = $this->branch->code;
         $this->users = User::find($order->user_id);
         $this->description = $order->description;          
+        $this->warehouse = $order->warehouse;          
         $this->subtotal = number_format($order->subtotal, 0, ',', '.');          
         $this->subtotalV = $order->subtotal;        
         $this->total = number_format($order->total, 0, ',', '.');          
@@ -81,17 +91,23 @@ class CreateOrder extends Component
         $this->ppn = number_format($order->hdkp === "0.00" ?  "10.00" : ($order->tax/$order->hdkp)*100,0);
         $this->isppn = $this->ppn !== 0 ? '1' : '0';
         $this->diskon= $order->diskon;          
+        $this->diskonExport= $order->diskon/100;          
         $this->diskonValue=number_format($order->diskon_value, 0, ',', '.'); 
         $this->diskonValueV=$order->diskon_value; 
         $this->hdkp = $order->hdkp;
-            
     }
   
   
+    public function gudangUpdate(){
+        $this->editingMaster->warehouse = $this->warehouse;       
+        $this->editingMaster->save();          
+    }
+
     public function keteranganUpdate(){
         $this->editingMaster->description = $this->description;       
         $this->editingMaster->save();          
     }
+
 
     public function diskonUpdate(){
         $this->diskonValue = number_format(($this->diskon/100) * $this->editingMaster->subtotal, 0, ',', '.');
@@ -101,6 +117,7 @@ class CreateOrder extends Component
     public function diskonValueUpdate(){
         $this->diskonValue = strpos($this->diskonValue, '.') !== false ? $this->diskonValue : number_format($this->diskonValue, 0, ',', '.');
         $this->diskon = (str_replace('.','',$this->diskonValue)/$this->editingMaster->subtotal)*100;
+        $this->diskonExport = $this->diskon/100;
         $this->totalMasterUpdate();   
     }
 
@@ -214,6 +231,7 @@ class CreateOrder extends Component
                                 ;
         $this->editingMaster->subtotal = str_replace('.','',$this->subtotal);
         $this->diskonUpdate();
+        $this->updateForm($this->editingMaster);
     }
 
     
@@ -241,8 +259,14 @@ class CreateOrder extends Component
     public function requestOrder()
     {
         if($this->branch->category == 'CABANG' || $this->branch->category == 'PUSAT' ){
-          
+
+            if( $this->editingMaster->warehouse  === 1){
                 $this->salesOrder();
+            }else{
+                $this->spkOrder();
+            }
+          
+                
       
             
         }else{
@@ -303,10 +327,14 @@ class CreateOrder extends Component
             'title' => 'Process Order',
             'button' => 'Detail Order',
             'note' => $this->editingMaster->description,
-            'body' => 'Mohon untuk segera kirim order dari.'. $this->branch->name . ' dengan No SO : '.$this->salesorder,
+            'body' => 'Mohon untuk segera kirim order dari.'. $this->branch->name . ' dengan No : '.$this->salesorder.$this->spk,
         ];
 
-        Mail::to('gudang@sekarayu.co.id')->send(new RequestOrder($details));
+        if($this->warehouse === 1){
+            Mail::to('gudang@sekarayu.co.id')->send(new RequestOrder($details));
+        }else{
+            Mail::to('ucu@araya.co.id')->send(new RequestOrder($details));
+        }      
         $this->editingMaster->status="PROCESS";
         $this->editingMaster->save();
         $this->dispatchBrowserEvent('alert',[
@@ -335,7 +363,7 @@ class CreateOrder extends Component
         $stmt->bindParam(":Catatan", $this->orderCode, PDO::PARAM_STR);
         $stmt->bindParam(":KodeKaryawan", $this->karyawan, PDO::PARAM_STR);
         $stmt->bindParam(":Subtotal", $this->subtotalV, PDO::PARAM_STR);
-        $stmt->bindParam(":Diskon", $this->diskon, PDO::PARAM_STR);
+        $stmt->bindParam(":Diskon", $this->diskonExport, PDO::PARAM_STR);
         $stmt->bindParam(":Potongan", $this->diskonValueV, PDO::PARAM_STR);
         $stmt->bindParam(":HDKP", $this->hdkp, PDO::PARAM_STR);
         $stmt->bindParam(":isPPN",$this->isppn, PDO::PARAM_INT);
@@ -379,11 +407,65 @@ class CreateOrder extends Component
         
     }
 
+    public function spkOrder(){
+        try{
+                  
+        $stmt = ConnectionLampung::connect()->prepare("SELECT LPAD(IFNULL(RIGHT(MAX(NoSPK),6),0)+1,9,'SPK000000') AS newspk FROM spk");			
+		$stmt -> execute();
+		$this->spk = $stmt -> fetch(PDO::FETCH_COLUMN);
+        $this->tanggal=date('Y-m-d');
+        
+
+        $stmt = ConnectionLampung::connect()->prepare("INSERT INTO spk
+        (NoSPK, Tanggal,  KodePelanggan, Catatan, Diskon) 
+        VALUES (:NoSPK, :Tanggal, :KodePelanggan, :Catatan, :Diskon)");
+
+        $stmt->bindParam(":NoSPK", $this->spk, PDO::PARAM_STR);
+        $stmt->bindParam(":Tanggal", $this->tanggal, PDO::PARAM_STR);
+        $stmt->bindParam(":KodePelanggan", $this->branchCode, PDO::PARAM_STR);
+        $stmt->bindParam(":Catatan", $this->orderCode, PDO::PARAM_STR);     
+        $stmt->bindParam(":Diskon", $this->diskonExport, PDO::PARAM_STR);        
+        $stmt->execute();        
+
+        $stmt = ConnectionLampung::connect()->prepare("INSERT INTO dspk 
+        (NoSPK, KodeBarang, Unit, Harga) 
+        VALUES (:NoSPK, :KodeBarang, :Unit, :Harga)");
+
+        $orderlist = Entities::leftJoin('products', 'order_details.product_id','=','products.id')            
+                ->select('order_details.*', 'products.code as codeProduct')
+                ->where('order_id',$this->order->id)->get();
+                
+        
+       foreach ($orderlist as $item) {
+
+        $this->codeDetail = $item->codeProduct;
+        $this->quantityDetail = $item->quantity;
+        $this->priceDetail =$item->price;        
+
+            $stmt->bindParam(":NoSPK", $this->spk, PDO::PARAM_STR);
+            $stmt->bindParam(":KodeBarang",$this->codeDetail , PDO::PARAM_STR);
+            $stmt->bindParam(":Unit", $this->quantityDetail, PDO::PARAM_STR);            
+            $stmt->bindParam(":Harga", $this->priceDetail, PDO::PARAM_STR);            
+            $stmt->execute();
+            
+        }
+         
+        $this->processOrder();
+
+        }catch(\Exception $e){
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'error',
+                'message'=>"Data Tidak Berhasil Disimpan!!"
+            ]);
+        }
+        
+    }
+
     public function render()
     {
         return view('livewire.create-order', [
          'entities' => Entities::leftJoin('products', 'order_details.product_id','=','products.id')            
-        ->select('order_details.*', 'products.name as nameProduct')
+        ->select('order_details.*', 'products.name as nameProduct', 'products.stok1', 'products.stok2')
         ->where('order_id',$this->order->id,)
         ->where(function($query){
             $query->orwhere('products.name','like',"%{$this->search}%")

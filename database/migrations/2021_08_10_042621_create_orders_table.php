@@ -19,6 +19,7 @@ class CreateOrdersTable extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('code',30)->unique();
             $table->string('status',20)->default("DRAFT");
+            $table->integer('warehouse')->default("1");
             $table->text('description')->nullable();
             $table->decimal('subtotal',15,2)->default("0");            
             $table->decimal('diskon',5,2)->default("0");

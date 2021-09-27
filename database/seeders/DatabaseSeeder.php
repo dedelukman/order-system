@@ -81,7 +81,17 @@ class DatabaseSeeder extends Seeder
             'active'=>'1',
             'email_verified_at' => now()
         ]);
+        \App\Models\User::create([            
+            'name'=>'Ucu Samsudin',
+            'email'=>'ucu@araya.co.id',
+            'password'=>'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'role'=>'USER',
+            'branch_id'=>'5',
+            'active'=>'1',
+            'email_verified_at' => now()
+        ]);
         $this->call([
+        
         CategorySeeder::class,
         ProductSeeder::class,
       

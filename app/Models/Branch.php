@@ -17,6 +17,7 @@ class Branch extends Model
         'category',
         'price',
         'discount',
+        'warehouse',
         'active',
     ];
 
