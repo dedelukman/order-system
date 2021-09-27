@@ -25,6 +25,9 @@
                                     </div>
                                 </form> 
                                 <div >
+                                    <button class="btn btn-primary "  wire:click="updateStok">                                        
+                                        <i class="fas fa-angle-double-down"> Update Stok</i>
+                                    </button>  
                                     <button class="btn btn-primary " data-toggle="modal" data-target="#formModal" wire:click="create">
                                         <i class="fas fa-plus fa-sm"> New</i>
                                     </button>  

@@ -3,8 +3,12 @@
 namespace App\Http\Livewire;
 
 use App\Models\Category;
+use App\Models\Connection;
+use App\Models\ConnectionLampung;
 use Livewire\Component;
 use App\Models\Product as Entities;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
 
@@ -105,6 +109,56 @@ class ShowProduct extends Component
                 'message'=>"Data Tidak Berhasil Disimpan!!"
             ]);
         }
+    }
+
+    public function updateStok(){
+        $this->stokJombang();
+        $this->stokLampung();
+    }
+
+    public function stokJombang(){
+        try{
+            $stmt = Connection::connect()->prepare("SELECT * FROM vstokpj");
+            $stmt->execute();   
+            $this->stokjombang =$stmt->fetchAll();
+       
+            foreach($this->stokjombang as $stok){                
+                DB::table('products')
+                ->where('code',  $stok['KodeBarang'])
+                ->update(['stok1' => $stok['Stok'] ]);               
+            }
+          
+
+        }  catch(\Exception $e){
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'error',
+                'message'=>"Data Stok Jombang Tidak Berhasil di Update!!"
+            ]);
+        }
+      
+    }
+
+    public function stokLampung(){
+        try{
+            $stmt = ConnectionLampung::connect()->prepare("SELECT * FROM stok");
+            $stmt->execute();   
+            $this->stoklampung =$stmt->fetchAll();
+            foreach($this->stoklampung as $stok){                
+                DB::table('products')
+                ->where('code',  $stok['KodeBarang'])
+                ->update(['stok2' => $stok['Stok'] ]);               
+            }
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'success',
+                'message'=>"Data Stok Berhasil di Update!!"
+            ]);
+        }  catch(\Exception $e){
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'error',
+                'message'=>"Data Stok Lampung Tidak Berhasil di Update!!"
+            ]);
+        }
+      
     }
 
     public function render()
