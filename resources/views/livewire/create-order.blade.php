@@ -39,7 +39,7 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <label for="branch">Kirim dari Gudang</label>
-                                        <select class="form-control" name="warehouse" wire:model.defer="warehouse"  wire:change="gudangUpdate()" {{ Auth::user()->role === 'USER' ? "disabled" : ''}} >                                                                                
+                                        <select class="form-control" name="warehouse" wire:model.defer="warehouse"  wire:change="gudangUpdate()" {{ Auth::user()->role === 'USER'  || $this->editingMaster->status === 'PROCESS' ? "disabled" : ''}} >                                                                                
                                             <option value="1" >JOMBANG</option>
                                             <option value="2" >LAMPUNG</option>                                                                                                                    
                                         </select>                           
