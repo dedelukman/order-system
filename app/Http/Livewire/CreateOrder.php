@@ -105,7 +105,8 @@ class CreateOrder extends Component
 
     public function keteranganUpdate(){
         $this->editingMaster->description = $this->description;       
-        $this->editingMaster->save();          
+        $this->editingMaster->save();
+        $this->orderCode = $this->editingMaster->code.'/'.$this->description;         
     }
 
 
@@ -352,6 +353,7 @@ class CreateOrder extends Component
 		$this->salesorder = $stmt -> fetch(PDO::FETCH_COLUMN);
         $this->tanggal=date('Y-m-d');
         
+        
 
         $stmt = Connection::connect()->prepare("INSERT INTO SO 
         (NoSo, Tanggal, KodePelanggan, Catatan, KodeKaryawan, Subtotal, Diskon, Potongan, HDKP, isPPN, PPn, Total) 
@@ -440,7 +442,12 @@ class CreateOrder extends Component
 
         $this->codeDetail = $item->codeProduct;
         $this->quantityDetail = $item->quantity;
-        $this->priceDetail =$item->price;        
+        if($this->branch->category == 'CABANG' || $this->branch->category == 'PUSAT' ){
+            $this->priceDetail =$item->price;
+        }else{
+            $this->priceDetail =$item->price*1.1;
+        }
+                
 
             $stmt->bindParam(":NoSPK", $this->spk, PDO::PARAM_STR);
             $stmt->bindParam(":KodeBarang",$this->codeDetail , PDO::PARAM_STR);

@@ -448,7 +448,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                    <button type="button" class="btn btn-success" wire:click="salesOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
+                    <button type="button" class="btn btn-success" wire:click="requestOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
                 </div>
                 </div>
             </div>
