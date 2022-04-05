@@ -287,7 +287,7 @@
                                     <span class="input-group-text">Rp</span>                            
                                 </div>
                                 <input type="text" class="form-control" aria-label="price" min="0" wire:change="totalUpdate()"
-                                wire:model.defer="harga">
+                                wire:model.defer="editing.price">
                                                               
                             </div>      
                            
@@ -448,7 +448,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
-                    <button type="button" class="btn btn-success" wire:click="requestOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
+                    <button type="button" class="btn btn-success" wire:click="konfirmasiOrder()" data-dismiss="modal">Ya, Saya Yakin</button>
                 </div>
                 </div>
             </div>

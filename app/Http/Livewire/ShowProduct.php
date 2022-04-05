@@ -116,6 +116,12 @@ class ShowProduct extends Component
         $this->stokLampung();
     }
 
+    public function updateProduk(){
+        $this->productTemp();
+        $this->productNew();
+        $this->priceUpdate();
+    }
+
     public function stokJombang(){
         try{
             $stmt = Connection::connect()->prepare("SELECT * FROM vstokpj");
@@ -137,6 +143,52 @@ class ShowProduct extends Component
         }
       
     }
+
+    public function productTemp(){
+        try{
+            $stmt = Connection::connect()->prepare("SELECT KodeBarang, NamaBarang, HJ, HET2 FROM barang WHERE KodeJenisBarang='PJ' AND (HJ>0 OR HET2>0) ");
+            $stmt->execute();   
+            $this->productTemp =$stmt->fetchAll();
+            DB::table('product_temperory')->delete();
+            foreach($this->productTemp as $product){                
+                DB::table('product_temperory')->insert([
+                    'code' => $product['KodeBarang'],
+                    'name' => $product['NamaBarang'],
+                    'hj' => $product['HJ'],
+                    'het2' => $product['HET2'],
+                ]);
+                              
+            }
+        
+            
+        }catch(\Exception $e){
+            $this->dispatchBrowserEvent('alert',[
+                'type'=>'error',
+                'message'=>"Data Produk Tidak Berhasil di Update!!"
+            ]);
+        }
+    }
+
+    public function productNew(){
+        DB::statement("INSERT INTO products
+        SELECT  null, substring(a.code,2,1) AS category_id, a.code, a.name, a.hj, a.het2, 0, 0, replace(trim(lower(a.name)), ' ', '-') photo, 
+        replace(trim(lower(a.name)), ' ', '-') slug,replace(trim(lower(a.name)), ' ', '-') descript ,1,null, null, null
+        FROM product_temperory a
+        LEFT JOIN products b ON a.code=b.code
+        WHERE b.code is null
+        ");
+    }
+
+    public function priceUpdate(){
+        DB::statement("UPDATE products a,
+        (SELECT a.code, a.hj, a.het2 FROM product_temperory a
+        LEFT JOIN products b ON a.code=b.code
+        WHERE a.hj!=b.hj  OR a.het2!=b.het2) b
+        SET a.hj=b.hj, a.het2=b.het2
+        WHERE a.code=b.code
+        ");
+    }
+
 
     public function stokLampung(){
         try{

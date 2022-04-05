@@ -25,6 +25,9 @@
                                     </div>
                                 </form> 
                                 <div >
+                                    <button class="btn btn-primary "  wire:click="updateProduk">                                        
+                                        <i class="fas fa-angle-double-down"> Update Produk</i>
+                                    </button>  
                                     <button class="btn btn-primary "  wire:click="updateStok">                                        
                                         <i class="fas fa-angle-double-down"> Update Stok</i>
                                     </button>  

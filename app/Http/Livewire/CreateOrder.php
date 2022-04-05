@@ -88,7 +88,7 @@ class CreateOrder extends Component
         $this->totalV = $order->total;        
         $this->ppnValue = number_format($order->tax, 0, ',', '.');          
         $this->ppnValueV = $order->tax;         
-        $this->ppn = number_format($order->hdkp === "0.00" ?  "10.00" : ($order->tax/$order->hdkp)*100,0);
+        $this->ppn = number_format($order->hdkp === "0.00" ?  "11.00" : ($order->tax/$order->hdkp)*100,0);
         $this->isppn = $this->ppn !== 0 ? '1' : '0';
         $this->diskon= $order->diskon;          
         $this->diskonExport= $order->diskon/100;          
@@ -294,6 +294,14 @@ class CreateOrder extends Component
         
     }
 
+    public function konfirmasiOrder(){
+        if( $this->editingMaster->warehouse  === 1){
+            $this->salesOrder();
+        }else{
+            $this->spkOrder();
+        }
+    }
+
     public function holdOrder()
     {
         $details = [
@@ -443,9 +451,9 @@ class CreateOrder extends Component
         $this->codeDetail = $item->codeProduct;
         $this->quantityDetail = $item->quantity;
         if($this->branch->category == 'CABANG' || $this->branch->category == 'PUSAT' ){
-            $this->priceDetail =$item->price;
-        }else{
             $this->priceDetail =$item->price*1.1;
+        }else{
+            $this->priceDetail =$item->price;
         }
                 
 
