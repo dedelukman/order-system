@@ -451,7 +451,7 @@ class CreateOrder extends Component
         $this->codeDetail = $item->codeProduct;
         $this->quantityDetail = $item->quantity;
         if($this->branch->category == 'CABANG' || $this->branch->category == 'PUSAT' ){
-            $this->priceDetail =$item->price*1.1;
+            $this->priceDetail =$item->price*1.11;
         }else{
             $this->priceDetail =$item->price;
         }
